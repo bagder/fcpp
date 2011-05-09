@@ -42,8 +42,8 @@ CFLAGS		= $(DEBUGFLAG) $(DEFINES)
 AR      	= ar
 ARFLAGS 	= rv
 .SUFFIXES: .o .c .c~ .h .h~ .a .i
-OBJS 		= cpp1.o cpp2.o cpp3.o cpp4.o cpp5.o cpp6.o memory.o
-FILEOBJS 		= cpp1.o cpp2.o cpp3.o cpp4.o cpp5.o cpp6.o memory.o usecpp.o
+OBJS 		= cpp1.o cpp2.o cpp3.o cpp4.o cpp5.o cpp6.o
+FILEOBJS 		= cpp1.o cpp2.o cpp3.o cpp4.o cpp5.o cpp6.o usecpp.o
 
 # ** compile cpp
 #

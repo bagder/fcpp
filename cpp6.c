@@ -19,69 +19,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ******************************************************************************/
-/******************************************************************************
- *                               FREXXWARE
- * ----------------------------------------------------------------------------
- *
- * Project: Frexx C Preprocessor
- * $Source: /home/user/start/cpp/RCS/cpp6.c,v $
- * $Revision: 1.5 $
- * $Date: 1994/01/24 09:35:17 $
- * $Author: start $
- * $State: Exp $
- * $Locker:  $
- *
- * ----------------------------------------------------------------------------
- * $Log: cpp6.c,v $
- * Revision 1.5  1994/01/24  09:35:17  start
- * Made the FPPTAG_RIGHTCONCAT work.
- *
- * Revision 1.4  1993/12/06  13:50:39  start
- * A lot of new stuff (too much to mention)
- *
- * Revision 1.4  1993/12/06  13:50:39  start
- * A lot of new stuff (too much to mention)
- *
- * Revision 1.3  1993/11/29  14:00:32  start
- * new
- *
- * Revision 1.2  1993/11/11  07:16:39  start
- * New stuff
- *
- * Revision 1.1  1993/11/03  09:13:08  start
- * Initial revision
- *
- *
- *****************************************************************************/
-/*
- *			    C P P 6 . C
- *		S u p p o r t	R o u t i n e s
- *
- * Edit History
- * 25-May-84 MM 	Added 8-bit support to type table.
- * 30-May-84 ARF	sharp() should output filename in quotes
- * 02-Aug-84 MM 	Newline and #line hacking.  sharp() now in cpp1.c
- * 31-Aug-84 MM 	USENET net.sources release
- * 11-Sep-84 ado/MM	Keepcomments, also line number pathological
- * 12-Sep-84 ado/MM	bug if comment changes to space and we unget later.
- * 03-Oct-84 gkr/MM	Fixed scannumber bug for '.e' (as in struct.element).
- * 04-Oct-84 MM 	Added ungetstring() for token concatenation
- * 08-Oct-84 MM 	Yet another attack on number scanning
- * 31-Oct-84 ado	Parameterized $ in identifiers
- *  2-Nov-84 MM 	Token concatenation is messier than I thought
- *  6-Dec-84 MM 	\<nl> is everywhere invisible.
- * 21-Oct-85 RMS	Rename `token' to `tokenbuf'.
- *			Dynamically allocate it, and make it as big as needed.
- * 23-Oct-85 RMS	Fix bugs storing into tokenbuf as it gets bigger.
- *			Change error msg to  cpp: "FILE", line LINE: MSG
- * 24-Oct-85 RMS	Turn off warnings about / then * inside a comment.
- * 16-Mar-86 FNF	Incorporate macro based C debugging package.
- *			Port to Commodore Amiga.
- * 20-Aug-88 Ois	Added time routines (or actually deleted stubs).
- * 20-Aug-88 Ois	Changed handling of token following ## to match Cpp4.
- * 16-Feb-93 DSt	Changed case of getmem() to Getmem().
- */
-
 #include <stdio.h>
 #include <ctype.h>
 #include "cppdef.h"
@@ -94,46 +31,46 @@ FILE_LOCAL char *incmem(struct Global *, char *, int);
 /*
  * skipnl()     skips over input text to the end of the line.
  * skipws()     skips over "whitespace" (spaces or tabs), but
- *		not skip over the end of the line.  It skips over
- *		TOK_SEP, however (though that shouldn't happen).
+ *              not skip over the end of the line.  It skips over
+ *              TOK_SEP, however (though that shouldn't happen).
  * scanid()     reads the next token (C identifier) into tokenbuf.
- *		The caller has already read the first character of
- *		the identifier.  Unlike macroid(), the token is
- *		never expanded.
+ *              The caller has already read the first character of
+ *              the identifier.  Unlike macroid(), the token is
+ *              never expanded.
  * macroid()    reads the next token (C identifier) into tokenbuf.
- *		If it is a #defined macro, it is expanded, and
- *		macroid() returns TRUE, otherwise, FALSE.
+ *              If it is a #defined macro, it is expanded, and
+ *              macroid() returns TRUE, otherwise, FALSE.
  * catenate()   Does the dirty work of token concatenation, TRUE if it did.
  * scanstring() Reads a string from the input stream, calling
- *		a user-supplied function for each character.
- *		This function may be output() to write the
- *		string to the output file, or save() to save
- *		the string in the work buffer.
+ *              a user-supplied function for each character.
+ *              This function may be output() to write the
+ *              string to the output file, or save() to save
+ *              the string in the work buffer.
  * scannumber() Reads a C numeric constant from the input stream,
- *		calling the user-supplied function for each
- *		character.  (output() or save() as noted above.)
+ *              calling the user-supplied function for each
+ *              character.  (output() or save() as noted above.)
  * save()       Save one character in the work[] buffer.
  * savestring() Saves a string in malloc() memory.
  * getfile()    Initialize a new FILEINFO structure, called when
- *		#include opens a new file, or a macro is to be
- *		expanded.
+ *              #include opens a new file, or a macro is to be
+ *              expanded.
  * Getmem()     Get a specified number of bytes from malloc memory.
  * output()     Write one character to stdout (calling Putchar) --
- *		implemented as a function so its address may be
- *		passed to scanstring() and scannumber().
+ *              implemented as a function so its address may be
+ *              passed to scanstring() and scannumber().
  * lookid()     Scans the next token (identifier) from the input
- *		stream.  Looks for it in the #defined symbol table.
- *		Returns a pointer to the definition, if found, or NULL
- *		if not present.  The identifier is stored in tokenbuf.
+ *              stream.  Looks for it in the #defined symbol table.
+ *              Returns a pointer to the definition, if found, or NULL
+ *              if not present.  The identifier is stored in tokenbuf.
  * defnedel()   Define enter/delete subroutine.  Updates the
- *		symbol table.
+ *              symbol table.
  * get()        Read the next byte from the current input stream,
- *		handling end of (macro/file) input and embedded
- *		comments appropriately.  Note that the global
- *		instring is -- essentially -- a parameter to get().
+ *              handling end of (macro/file) input and embedded
+ *              comments appropriately.  Note that the global
+ *              instring is -- essentially -- a parameter to get().
  * cget()       Like get(), but skip over TOK_SEP.
  * unget()      Push last gotten character back on the input stream.
- * cerror()	This routine format an print messages to the user.
+ * cerror()     This routine format an print messages to the user.
  */
 
 /*
@@ -153,36 +90,36 @@ FILE_LOCAL char *incmem(struct Global *, char *, int);
 #endif
 
 #if OK_DOLLAR
-#define DOL	LET
+#define DOL     LET
 #else
-#define DOL	000
+#define DOL     000
 #endif
 
-char type[256] = {		/* Character type codes    Hex		*/
-  END,   000,	 000,	000,   000,   000,   000,   000, /* 00		*/
-  000,   SPA,	 000,	000,   000,   000,   000,   000, /* 08		*/
-  000,   000,	 000,	000,   000,   000,   000,   000, /* 10		*/
-  000,   000,	 000,	000,   000,   LET,   000,   SPA, /* 18		*/
-  SPA,   OP_NOT, QUO,	000,   DOL,   OP_MOD,OP_AND,QUO, /* 20	!"#$%&' */
+char type[256] = {              /* Character type codes    Hex          */
+  END,   000,    000,   000,   000,   000,   000,   000, /* 00          */
+  000,   SPA,    000,   000,   000,   000,   000,   000, /* 08          */
+  000,   000,    000,   000,   000,   000,   000,   000, /* 10          */
+  000,   000,    000,   000,   000,   LET,   000,   SPA, /* 18          */
+  SPA,   OP_NOT, QUO,   000,   DOL,   OP_MOD,OP_AND,QUO, /* 20  !"#$%&' */
   OP_LPA,OP_RPA,OP_MUL,OP_ADD, 000,OP_SUB,   DOT,OP_DIV, /* 28 ()*+,-./ */
-  DIG,   DIG,	 DIG,	DIG,   DIG,   DIG,   DIG,   DIG, /* 30 01234567 */
-  DIG,   DIG,OP_COL,	000, OP_LT, OP_EQ, OP_GT,OP_QUE, /* 38 89:;<=>? */
-  000,   LET,	 LET,	LET,   LET,   LET,   LET,   LET, /* 40 @ABCDEFG */
-  LET,   LET,	 LET,	LET,   LET,   LET,   LET,   LET, /* 48 HIJKLMNO */
-  LET,   LET,	 LET,	LET,   LET,   LET,   LET,   LET, /* 50 PQRSTUVW */
-  LET,   LET,	 LET,	000,   BSH,   000,OP_XOR,   LET, /* 58 XYZ[\]^_ */
-  000,   LET,	 LET,	LET,   LET,   LET,   LET,   LET, /* 60 `abcdefg */
-  LET,   LET,	 LET,	LET,   LET,   LET,   LET,   LET, /* 68 hijklmno */
-  LET,   LET,	 LET,	LET,   LET,   LET,   LET,   LET, /* 70 pqrstuvw */
-  LET,   LET,	 LET,	000, OP_OR,   000,OP_NOT,   000, /* 78 xyz{|}~	*/
-  000,   000,	 000,	000,   000,   000,   000,   000, /*   80 .. FF	*/
-  000,   000,	 000,	000,   000,   000,   000,   000, /*   80 .. FF	*/
-  000,   000,	 000,	000,   000,   000,   000,   000, /*   80 .. FF	*/
-  000,   000,	 000,	000,   000,   000,   000,   000, /*   80 .. FF	*/
-  000,   000,	 000,	000,   000,   000,   000,   000, /*   80 .. FF	*/
-  000,   000,	 000,	000,   000,   000,   000,   000, /*   80 .. FF	*/
-  000,   000,	 000,	000,   000,   000,   000,   000, /*   80 .. FF	*/
-  000,   000,	 000,	000,   000,   000,   000,   000, /*   80 .. FF	*/
+  DIG,   DIG,    DIG,   DIG,   DIG,   DIG,   DIG,   DIG, /* 30 01234567 */
+  DIG,   DIG,OP_COL,    000, OP_LT, OP_EQ, OP_GT,OP_QUE, /* 38 89:;<=>? */
+  000,   LET,    LET,   LET,   LET,   LET,   LET,   LET, /* 40 @ABCDEFG */
+  LET,   LET,    LET,   LET,   LET,   LET,   LET,   LET, /* 48 HIJKLMNO */
+  LET,   LET,    LET,   LET,   LET,   LET,   LET,   LET, /* 50 PQRSTUVW */
+  LET,   LET,    LET,   000,   BSH,   000,OP_XOR,   LET, /* 58 XYZ[\]^_ */
+  000,   LET,    LET,   LET,   LET,   LET,   LET,   LET, /* 60 `abcdefg */
+  LET,   LET,    LET,   LET,   LET,   LET,   LET,   LET, /* 68 hijklmno */
+  LET,   LET,    LET,   LET,   LET,   LET,   LET,   LET, /* 70 pqrstuvw */
+  LET,   LET,    LET,   000, OP_OR,   000,OP_NOT,   000, /* 78 xyz{|}~  */
+  000,   000,    000,   000,   000,   000,   000,   000, /*   80 .. FF  */
+  000,   000,    000,   000,   000,   000,   000,   000, /*   80 .. FF  */
+  000,   000,    000,   000,   000,   000,   000,   000, /*   80 .. FF  */
+  000,   000,    000,   000,   000,   000,   000,   000, /*   80 .. FF  */
+  000,   000,    000,   000,   000,   000,   000,   000, /*   80 .. FF  */
+  000,   000,    000,   000,   000,   000,   000,   000, /*   80 .. FF  */
+  000,   000,    000,   000,   000,   000,   000,   000, /*   80 .. FF  */
+  000,   000,    000,   000,   000,   000,   000,   000, /*   80 .. FF  */
 };
 
 void skipnl(struct Global *global)
@@ -191,8 +128,8 @@ void skipnl(struct Global *global)
    * Skip to the end of the current input line.
    */
   int c;
-  
-  do {				/* Skip to newline	*/
+
+  do {                          /* Skip to newline      */
     c = get(global);
   } while (c != '\n' && c != EOF_CHAR);
   return;
@@ -204,8 +141,8 @@ int skipws(struct Global *global)
    * Skip over whitespace
    */
   int c;
-  
-  do {				/* Skip whitespace	*/
+
+  do {                          /* Skip whitespace      */
     c = get(global);
 #if COMMENT_INVISIBLE
   } while (type[c] == SPA || c == COM_SEP);
@@ -216,7 +153,7 @@ int skipws(struct Global *global)
 }
 
 void scanid(struct Global *global,
-  int c)				/* First char of id	*/
+  int c)                                /* First char of id     */
 {
   /*
    * Get the next token (an id) into the token buffer.
@@ -225,15 +162,15 @@ void scanid(struct Global *global,
    */
 
   int ct;
-  
+
   if (c == DEF_MAGIC)                     /* Eat the magic token  */
     c = get(global);                      /* undefiner.           */
   ct = 0;
   do
     {
       if (ct == global->tokenbsize)
-	global->tokenbuf = incmem (global, global->tokenbuf, 1 +
-				   (global->tokenbsize *= 2));
+        global->tokenbuf = realloc(global->tokenbuf, 1 +
+                                   (global->tokenbsize *= 2));
       global->tokenbuf[ct++] = c;
       c = get(global);
     }
@@ -252,7 +189,7 @@ ReturnCode macroid(struct Global *global, int *c)
    */
   DEFBUF *dp;
   ReturnCode ret=FPP_OK;
-  
+
   if (global->infile != NULL && global->infile->fp != NULL)
     global->recursion = 0;
   while (type[*c] == LET && (dp = lookid(global, *c)) != NULL) {
@@ -277,7 +214,7 @@ int catenate(struct Global *global, ReturnCode *ret)
   int c;
   char *token1;
 #endif
-  
+
 #if OK_CONCAT
   if (get(global) != TOK_SEP) {                 /* Token concatenation  */
     unget(global);
@@ -289,34 +226,34 @@ int catenate(struct Global *global, ReturnCode *ret)
     if(global->rightconcat) {
       *ret=macroid(global, &c);           /* Scan next token      */
       if(*ret)
-	return(FALSE);
+        return(FALSE);
     } else
       lookid(global, c);
     switch(type[c]) {                   /* What was it?         */
-    case LET:				/* An identifier, ...	*/
+    case LET:                           /* An identifier, ...   */
       if ((int)strlen(token1) + (int)strlen(global->tokenbuf) >= NWORK) {
-	cfatal(global, FATAL_WORK_AREA_OVERFLOW, token1);
-	*ret=FPP_WORK_AREA_OVERFLOW;
-	return(FALSE);
+        cfatal(global, FATAL_WORK_AREA_OVERFLOW, token1);
+        *ret=FPP_WORK_AREA_OVERFLOW;
+        return(FALSE);
       }
       sprintf(global->work, "%s%s", token1, global->tokenbuf);
       break;
-    case DIG:				/* A number		*/
-    case DOT:				/* Or maybe a float	*/
+    case DIG:                           /* A number             */
+    case DOT:                           /* Or maybe a float     */
       strcpy(global->work, token1);
       global->workp = global->work + strlen(global->work);
       *ret=scannumber(global, c, save);
       if(*ret)
-	return(FALSE);
+        return(FALSE);
       *ret=save(global, EOS);
       if(*ret)
-	return(FALSE);
+        return(FALSE);
       break;
-    default:				/* An error, ...	*/
+    default:                            /* An error, ...        */
       if (isprint(c))
-	cerror(global, ERROR_STRANG_CHARACTER, c);
+        cerror(global, ERROR_STRANG_CHARACTER, c);
       else
-	cerror(global, ERROR_STRANG_CHARACTER2, c);
+        cerror(global, ERROR_STRANG_CHARACTER2, c);
       strcpy(global->work, token1);
       unget(global);
       break;
@@ -327,7 +264,7 @@ int catenate(struct Global *global, ReturnCode *ret)
      * new (concatenated) token after freeing token1.
      * Finally, setup to read the new token.
      */
-    Freemem(token1);                        /* Free up memory       */
+    free(token1);                            /* Free up memory       */
     *ret=ungetstring(global, global->work);  /* Unget the new thing, */
     if(*ret)
       return(FALSE);
@@ -339,9 +276,9 @@ int catenate(struct Global *global, ReturnCode *ret)
 }
 
 ReturnCode scanstring(struct Global *global,
-		      int delim, /* ' or " */
-		      /* Output function: */
-		      ReturnCode (*outfun)(struct Global *, int))
+                      int delim, /* ' or " */
+                      /* Output function: */
+                      ReturnCode (*outfun)(struct Global *, int))
 {
   /*
    * Scan off a string.  Warning if terminated by newline or EOF.
@@ -351,21 +288,21 @@ ReturnCode scanstring(struct Global *global,
 
   int c;
   ReturnCode ret;
-  
-  global->instring = TRUE;		/* Don't strip comments         */
+
+  global->instring = TRUE;              /* Don't strip comments         */
   ret=(*outfun)(global, delim);
   if(ret)
     return(ret);
   while ((c = get(global)) != delim
-	 && c != '\n'
-	 && c != EOF_CHAR) {
+         && c != '\n'
+         && c != EOF_CHAR) {
     ret=(*outfun)(global, c);
     if(ret)
       return(ret);
     if (c == '\\') {
       ret=(*outfun)(global, get(global));
       if(ret)
-	return(ret);
+        return(ret);
     }
   }
   global->instring = FALSE;
@@ -380,47 +317,47 @@ ReturnCode scanstring(struct Global *global,
 }
 
 ReturnCode scannumber(struct Global *global,
-		      int c,		/* First char of number */
-		      /* Output/store func: */
-		      ReturnCode (*outfun)(struct Global *, int))
+                      int c,            /* First char of number */
+                      /* Output/store func: */
+                      ReturnCode (*outfun)(struct Global *, int))
 {
   /*
    * Process a number.  We know that c is from 0 to 9 or dot.
    * Algorithm from Dave Conroy's Decus C.
    */
-  
-  int radix;		/* 8, 10, or 16 	*/
-  int expseen;		/* 'e' seen in floater  */
-  int signseen;		/* '+' or '-' seen      */
-  int octal89;		/* For bad octal test	*/
-  int dotflag;		/* TRUE if '.' was seen */
+
+  int radix;            /* 8, 10, or 16         */
+  int expseen;          /* 'e' seen in floater  */
+  int signseen;         /* '+' or '-' seen      */
+  int octal89;          /* For bad octal test   */
+  int dotflag;          /* TRUE if '.' was seen */
   ReturnCode ret;
   char done=FALSE;
-  
-  expseen = FALSE;			/* No exponent seen yet */
-  signseen = TRUE;			/* No +/- allowed yet	*/
-  octal89 = FALSE;			/* No bad octal yet	*/
-  radix = 10;				/* Assume decimal	*/
+
+  expseen = FALSE;                      /* No exponent seen yet */
+  signseen = TRUE;                      /* No +/- allowed yet   */
+  octal89 = FALSE;                      /* No bad octal yet     */
+  radix = 10;                           /* Assume decimal       */
   if ((dotflag = (c == '.')) != FALSE) {/* . something?         */
     ret=(*outfun)(global, '.');         /* Always out the dot   */
     if(ret)
       return(ret);
     if (type[(c = get(global))] != DIG) { /* If not a float numb, */
       unget(global);                    /* Rescan strange char  */
-      return(FPP_OK);			/* All done for now	*/
+      return(FPP_OK);                   /* All done for now     */
     }
-  }					/* End of float test	*/
+  }                                     /* End of float test    */
   else if (c == '0') {                  /* Octal or hex?        */
     ret=(*outfun)(global, c);           /* Stuff initial zero   */
     if(ret)
       return(ret);
-    radix = 8;				/* Assume it's octal    */
+    radix = 8;                          /* Assume it's octal    */
     c = get(global);                    /* Look for an 'x'      */
     if (c == 'x' || c == 'X') {         /* Did we get one?      */
-      radix = 16;			/* Remember new radix	*/
+      radix = 16;                       /* Remember new radix   */
       ret=(*outfun)(global, c);         /* Stuff the 'x'        */
       if(ret)
-	return(ret);
+        return(ret);
       c = get(global);                  /* Get next character   */
     }
   }
@@ -430,45 +367,45 @@ ReturnCode scannumber(struct Global *global,
      * as legitimate floating-point numbers.
      */
     if (radix != 16 && (c == 'e' || c == 'E')) {
-      if (expseen)                    	/* Already saw 'E'?     */
-	break;				/* Exit loop, bad nbr.	*/
-      expseen = TRUE; 			/* Set exponent seen	*/
-      signseen = FALSE;			/* We can read '+' now  */
-      radix = 10;			/* Decimal exponent	*/
+      if (expseen)                      /* Already saw 'E'?     */
+        break;                          /* Exit loop, bad nbr.  */
+      expseen = TRUE;                   /* Set exponent seen    */
+      signseen = FALSE;                 /* We can read '+' now  */
+      radix = 10;                       /* Decimal exponent     */
     }
     else if (radix != 16 && c == '.') {
-      if (dotflag)                    	/* Saw dot already?     */
-	break;				/* Exit loop, two dots	*/
-      dotflag = TRUE; 			/* Remember the dot	*/
-      radix = 10;			/* Decimal fraction	*/
+      if (dotflag)                      /* Saw dot already?     */
+        break;                          /* Exit loop, two dots  */
+      dotflag = TRUE;                   /* Remember the dot     */
+      radix = 10;                       /* Decimal fraction     */
     }
     else if (c == '+' || c == '-') {    /* 1.0e+10              */
-      if (signseen)                   	/* Sign in wrong place? */
-	break;				/* Exit loop, not nbr.	*/
-      /* signseen = TRUE; */		/* Remember we saw it	*/
-    } else {				/* Check the digit	*/
+      if (signseen)                     /* Sign in wrong place? */
+        break;                          /* Exit loop, not nbr.  */
+      /* signseen = TRUE; */            /* Remember we saw it   */
+    } else {                            /* Check the digit      */
       switch (c) {
-      case '8': case '9':             	/* Sometimes wrong      */
-	octal89 = TRUE;			/* Do check later	*/
+      case '8': case '9':               /* Sometimes wrong      */
+        octal89 = TRUE;                 /* Do check later       */
       case '0': case '1': case '2': case '3':
       case '4': case '5': case '6': case '7':
-	break;				/* Always ok		*/
-	
+        break;                          /* Always ok            */
+
       case 'a': case 'b': case 'c': case 'd': case 'e': case 'f':
       case 'A': case 'B': case 'C': case 'D': case 'E': case 'F':
-	if (radix == 16)    		/* Alpha's are ok only  */
-	  break;			/* if reading hex.	*/
-      default:				/* At number end	*/
-	done=TRUE;			/* Break from for loop	*/
-	continue;
-      }					/* End of switch	*/
-    }					/* End general case	*/
+        if (radix == 16)                /* Alpha's are ok only  */
+          break;                        /* if reading hex.      */
+      default:                          /* At number end        */
+        done=TRUE;                      /* Break from for loop  */
+        continue;
+      }                                 /* End of switch        */
+    }                                   /* End general case     */
     ret=(*outfun)(global, c);           /* Accept the character */
     if(ret)
       return(ret);
-    signseen = TRUE;			/* Don't read sign now  */
+    signseen = TRUE;                    /* Don't read sign now  */
     c = get(global);                    /* Read another char    */
-  }					/* End of scan loop	*/
+  }                                     /* End of scan loop     */
   /*
    * When we break out of the scan loop, c contains the first
    * character (maybe) not in the number.  If the number is an
@@ -482,10 +419,10 @@ ReturnCode scannumber(struct Global *global,
     if (c == 'l' || c == 'L') {
       ret=(*outfun)(global, c);
       if(ret)
-	return(ret);
+        return(ret);
       c = get(global);                   /* Ungotten later       */
     }
-  } else {					/* Else it's an integer */
+  } else {                                      /* Else it's an integer */
     /*
      * We know that dotflag and expseen are both zero, now:
      * dotflag signals "saw 'L'", and
@@ -496,27 +433,27 @@ ReturnCode scannumber(struct Global *global,
       switch (c) {
       case 'l':
       case 'L':
-	if (dotflag) {
-	  done=FALSE;
-	  continue;
-	}
-	dotflag = TRUE;
-	break;
+        if (dotflag) {
+          done=FALSE;
+          continue;
+        }
+        dotflag = TRUE;
+        break;
       case 'u':
       case 'U':
-	if (expseen) {
-	  done=FALSE;
-	  continue;
-	}
-	expseen = TRUE;
-	break;
+        if (expseen) {
+          done=FALSE;
+          continue;
+        }
+        expseen = TRUE;
+        break;
       default:
-	done=FALSE;
-	continue;
+        done=FALSE;
+        continue;
       }
       ret=(*outfun)(global, c);       /* Got 'L' or 'U'.      */
       if(ret)
-	return(ret);
+        return(ret);
       c = get(global);                /* Look at next, too.   */
     }
   }
@@ -545,89 +482,53 @@ char *savestring(struct Global *global, char *text)
    */
 
   char *result;
-  
-  result = Getmem(global, strlen(text) + 1);
+  result = malloc(strlen(text) + 1);
   strcpy(result, text);
   return (result);
 }
 
 ReturnCode getfile(struct Global *global,
-		   int bufsize, /* Line or define buffer size	*/
-		   char *name,
-		   FILEINFO **file) /* File or macro name string	*/
+                   int bufsize, /* Line or define buffer size   */
+                   char *name,
+                   FILEINFO **file) /* File or macro name string        */
 {
   /*
    * Common FILEINFO buffer initialization for a new file or macro.
    */
 
   int size;
-  
-  size = strlen(name);                    	/* File/macro name      */
+
+  size = strlen(name);                          /* File/macro name      */
 
   if(!size) {
       name = "[stdin]";
       size = strlen(name);
   }
 
-  *file = (FILEINFO *) Getmem(global, (int)(sizeof (FILEINFO) + bufsize + size));
+  *file = (FILEINFO *) malloc((int)(sizeof (FILEINFO) + bufsize + size));
   if(!*file)
     return(FPP_OUT_OF_MEMORY);
-  (*file)->parent = global->infile;		/* Chain files together */
-  (*file)->fp = NULL;				/* No file yet		*/
+  (*file)->parent = global->infile;             /* Chain files together */
+  (*file)->fp = NULL;                           /* No file yet          */
   (*file)->filename = savestring(global, name); /* Save file/macro name */
-  (*file)->progname = NULL;			/* No #line seen yet	*/
-  (*file)->unrecur = 0;				/* No macro fixup	*/
-  (*file)->bptr = (*file)->buffer;		/* Initialize line ptr	*/
-  (*file)->buffer[0] = EOS;			/* Force first read	*/
-  (*file)->line = 0; 				/* (Not used just yet)  */
-  if (global->infile != NULL)                  	/* If #include file     */
-    global->infile->line = global->line;	/* Save current line	*/
-  global->infile = (*file);			/* New current file	*/
-  global->line = 1;				/* Note first line	*/
-  return(FPP_OK);                     		/* All done.            */
-}
-
-void Freemem(void *ptr)
-{
-  /*
-   * Free a block of memory!
-   */
-
-  Free(ptr);
-}
-
-
-char *Getmem(struct Global *global, int size)
-{
-  /*
-   * Get a block of free memory.
-   */
-
-  char *result;
-  if ((result = (char *)Malloc((unsigned) size)) == NULL)
-    cfatal(global, FATAL_OUT_OF_MEMORY);
-  return(result);
-}
-
-FILE_LOCAL
-char *incmem(struct Global *global, char *obj, int size)
-{
-  /*
-   * Get a block of free memory.
-   */
-  
-  char *result;
-  if ((result = Realloc(obj, (unsigned) size)) == NULL)
-    cfatal(global, FATAL_OUT_OF_MEMORY);
-  return(result);
+  (*file)->progname = NULL;                     /* No #line seen yet    */
+  (*file)->unrecur = 0;                         /* No macro fixup       */
+  (*file)->bptr = (*file)->buffer;              /* Initialize line ptr  */
+  (*file)->buffer[0] = EOS;                     /* Force first read     */
+  (*file)->line = 0;                            /* (Not used just yet)  */
+  if (global->infile != NULL)                   /* If #include file     */
+    global->infile->line = global->line;        /* Save current line    */
+  global->infile = (*file);                     /* New current file     */
+  global->line = 1;                             /* Note first line      */
+  return(FPP_OK);                               /* All done.            */
 }
 
 /*
- *			C P P	S y m b o l   T a b l e s
+ *                      C P P   S y m b o l   T a b l e s
  */
-  
+
 DEFBUF *lookid(struct Global *global,
-	       int c)		/* First character of token	*/
+               int c)           /* First character of token     */
 {
   /*
    * Look for the next token in the symbol table. Returns token in tokenbuf.
@@ -638,37 +539,37 @@ DEFBUF *lookid(struct Global *global,
   DEFBUF *dp;
   int ct;
   int temp;
-  int isrecurse;	/* For #define foo foo	*/
-  
+  int isrecurse;        /* For #define foo foo  */
+
   nhash = 0;
   if ((isrecurse = (c == DEF_MAGIC)))   /* If recursive macro   */
     c = get(global);                    /* hack, skip DEF_MAGIC */
   ct = 0;
   do {
     if (ct == global->tokenbsize)
-      global->tokenbuf = incmem(global, global->tokenbuf, 1 + (global->tokenbsize *= 2));
-    global->tokenbuf[ct++] = c; 	/* Store token byte	*/
-    nhash += c; 			/* Update hash value	*/
+      global->tokenbuf = realloc(global->tokenbuf, 1 + (global->tokenbsize *= 2));
+    global->tokenbuf[ct++] = c;         /* Store token byte     */
+    nhash += c;                         /* Update hash value    */
     c = get(global);
   }  while (type[c] == LET || type[c] == DIG);
   unget(global);                        /* Rescan terminator    */
-  global->tokenbuf[ct] = EOS;		/* Terminate token	*/
+  global->tokenbuf[ct] = EOS;           /* Terminate token      */
   if (isrecurse)                        /* Recursive definition */
     return(NULL);                       /* undefined just now   */
-  nhash += ct;				/* Fix hash value	*/
-  dp = global->symtab[nhash % SBSIZE];  /* Starting bucket	*/
+  nhash += ct;                          /* Fix hash value       */
+  dp = global->symtab[nhash % SBSIZE];  /* Starting bucket      */
   while (dp != (DEFBUF *) NULL) {       /* Search symbol table  */
     if (dp->hash == nhash               /* Fast precheck        */
-	&& (temp = strcmp(dp->name, global->tokenbuf)) >= 0)
+        && (temp = strcmp(dp->name, global->tokenbuf)) >= 0)
       break;
-    dp = dp->link;			/* Nope, try next one	*/
+    dp = dp->link;                      /* Nope, try next one   */
   }
   return((temp == 0) ? dp : NULL);
 }
 
 DEFBUF *defendel(struct Global *global,
-		 char *name,
-		 int delete) 		/* TRUE to delete a symbol */
+                 char *name,
+                 int delete)            /* TRUE to delete a symbol */
 {
   /*
    * Enter this name in the lookup table (delete = FALSE)
@@ -683,7 +584,7 @@ DEFBUF *defendel(struct Global *global,
   int nhash;
   int temp;
   int size;
-  
+
   for (nhash = 0, np = name; *np != EOS;)
     nhash += *np++;
   size = (np - name);
@@ -691,21 +592,21 @@ DEFBUF *defendel(struct Global *global,
   prevp = &global->symtab[nhash % SBSIZE];
   while ((dp = *prevp) != (DEFBUF *) NULL) {
     if (dp->hash == nhash
-	&& (temp = strcmp(dp->name, name)) >= 0) {
+        && (temp = strcmp(dp->name, name)) >= 0) {
       if (temp > 0)
-	dp = NULL;			/* Not found		*/
+        dp = NULL;                      /* Not found            */
       else {
-	*prevp = dp->link;		/* Found, unlink and	*/
-	if (dp->repl != NULL)       	/* Free the replacement */
-	  Freemem(dp->repl);         	/* if any, and then     */
-	Freemem((char *) dp);          	/* Free the symbol      */
+        *prevp = dp->link;              /* Found, unlink and    */
+        if (dp->repl != NULL)           /* Free the replacement */
+          free(dp->repl);               /* if any, and then     */
+        free((char *) dp);              /* Free the symbol      */
       }
       break;
     }
     prevp = &dp->link;
   }
   if (!delete) {
-    dp = (DEFBUF *) Getmem(global, (int) (sizeof (DEFBUF) + size));
+    dp = (DEFBUF *) malloc((int) (sizeof (DEFBUF) + size));
     dp->link = *prevp;
     *prevp = dp;
     dp->hash = nhash;
@@ -721,12 +622,12 @@ void outdefines(struct Global *global)
 {
   DEFBUF *dp;
   DEFBUF **syp;
-  
+
   deldefines(global);                   /* Delete built-in #defines     */
   for (syp = global->symtab; syp < &global->symtab[SBSIZE]; syp++) {
     if ((dp = *syp) != (DEFBUF *) NULL) {
       do {
-	outadefine(global, dp);
+        outadefine(global, dp);
       } while ((dp = dp->link) != (DEFBUF *) NULL);
     }
   }
@@ -737,7 +638,7 @@ void outadefine(struct Global *global, DEFBUF *dp)
 {
   char *cp;
   int c;
-  
+
   /* printf("#define %s", dp->name); */
   Putstring(global, "#define ");
   Putstring(global, dp->name);
@@ -763,35 +664,35 @@ void outadefine(struct Global *global, DEFBUF *dp)
     Putchar(global, '\t');
     for (cp = dp->repl; (c = *cp++ & 0xFF) != EOS;) {
       if (c >= MAC_PARM && c < (MAC_PARM + PAR_MAC)) {
-	/* printf("__%d", c - MAC_PARM + 1); */
-	Putstring(global, "__");
-	Putint(global, c - MAC_PARM + 1);
+        /* printf("__%d", c - MAC_PARM + 1); */
+        Putstring(global, "__");
+        Putint(global, c - MAC_PARM + 1);
       } else if (isprint(c) || c == '\t' || c == '\n')
-	Putchar(global, c);
+        Putchar(global, c);
       else switch (c) {
       case QUOTE_PARM:
-	Putchar(global, '#');
-	break;
-      case DEF_MAGIC: 	    /* Special anti-recursion */
+        Putchar(global, '#');
+        break;
+      case DEF_MAGIC:       /* Special anti-recursion */
       case MAC_PARM + PAR_MAC:    /* Special "arg" marker */
-	break;
+        break;
       case COM_SEP:
 #if COMMENT_INVISIBLE
-	Putstring(global, "/**/");
+        Putstring(global, "/**/");
 #else
-	Putchar(global, ' ');
+        Putchar(global, ' ');
 #endif
-	break;
+        break;
       case TOK_SEP:
-	Putstring(global, "##");
-	break;
+        Putstring(global, "##");
+        break;
       default:
-	{
-	  /* Octal output! */
-	  char buffer[32];
-	  sprintf(buffer, "\\0%o", c);
-	  Putstring(global, buffer);
-	}
+        {
+          /* Octal output! */
+          char buffer[32];
+          sprintf(buffer, "\\0%o", c);
+          Putstring(global, buffer);
+        }
       }
     }
   }
@@ -799,7 +700,7 @@ void outadefine(struct Global *global, DEFBUF *dp)
 }
 
 /*
- *			G E T
+ *                      G E T
  */
 
 int get(struct Global *global)
@@ -811,9 +712,9 @@ int get(struct Global *global)
 
   int c;
   FILEINFO *file;
-  int popped; 	/* Recursion fixup	*/
+  int popped;   /* Recursion fixup      */
   long comments=0;
-  
+
   popped = 0;
  get_from_file:
   if ((file = global->infile) == NULL)
@@ -836,9 +737,9 @@ int get(struct Global *global)
       popped++;
       global->recursion -= file->unrecur;
       if (global->recursion < 0)
-	global->recursion = 0;
-      global->infile = file->parent;		/* Unwind file chain	*/
-    } else {				/* Else get from a file */
+        global->recursion = 0;
+      global->infile = file->parent;            /* Unwind file chain    */
+    } else {                            /* Else get from a file */
       /*
        * If a input routine has been specified in the initial taglist,
        * we should get the next line from that function IF we're reading
@@ -846,70 +747,70 @@ int get(struct Global *global)
        */
 
       if(global->input && global->first_file && !strcmp(global->first_file, file->filename))
-	file->bptr = global->input(file->buffer, NBUFF, global->userdata);
-      else 
-	file->bptr = fgets(file->buffer, NBUFF, file->fp);
+        file->bptr = global->input(file->buffer, NBUFF, global->userdata);
+      else
+        file->bptr = fgets(file->buffer, NBUFF, file->fp);
       if(file->bptr != NULL) {
-	goto newline;		/* process the line	*/
+        goto newline;           /* process the line     */
       } else {
-	if(!(global->input && global->first_file && !strcmp(global->first_file, file->filename)))
-	  /* If the input function isn't user supplied, close the file! */
-	  fclose(file->fp);           /* Close finished file  */
-	if ((global->infile = file->parent) != NULL) {
-	  /*
-	   * There is an "ungotten" newline in the current
-	   * infile buffer (set there by doinclude() in
-	   * cpp1.c).  Thus, we know that the mainline code
-	   * is skipping over blank lines and will do a
-	   * #line at its convenience.
-	   */
-	  global->wrongline = TRUE;	/* Need a #line now	*/
-	}
+        if(!(global->input && global->first_file && !strcmp(global->first_file, file->filename)))
+          /* If the input function isn't user supplied, close the file! */
+          fclose(file->fp);           /* Close finished file  */
+        if ((global->infile = file->parent) != NULL) {
+          /*
+           * There is an "ungotten" newline in the current
+           * infile buffer (set there by doinclude() in
+           * cpp1.c).  Thus, we know that the mainline code
+           * is skipping over blank lines and will do a
+           * #line at its convenience.
+           */
+          global->wrongline = TRUE;     /* Need a #line now     */
+        }
       }
     }
     /*
      * Free up space used by the (finished) file or macro and
      * restart input from the parent file/macro, if any.
      */
-    Freemem(file->filename);            /* Free name and        */
+    free(file->filename);               /* Free name and        */
     if (file->progname != NULL)         /* if a #line was seen, */
-      Freemem(file->progname);          /* free it, too.        */
-    Freemem(file);                      /* Free file space      */
+      free(file->progname);             /* free it, too.        */
+    free(file);                         /* Free file space      */
     if (global->infile == NULL)         /* If at end of file    */
       return (EOF_CHAR);                /* Return end of file   */
-    global->line = global->infile->line; /* Reset line number	*/
-    goto get_from_file; 		/* Get from the top.	*/
+    global->line = global->infile->line; /* Reset line number   */
+    goto get_from_file;                 /* Get from the top.    */
   }
   /*
    * Common processing for the new character.
    */
   if (c == DEF_MAGIC && file->fp != NULL) /* Don't allow delete   */
-    goto newline;			/* from a file		*/
+    goto newline;                       /* from a file          */
   if (file->parent != NULL) {           /* Macro or #include    */
     if (popped != 0)
       file->parent->unrecur += popped;
     else {
       global->recursion -= file->parent->unrecur;
       if (global->recursion < 0)
-	global->recursion = 0;
+        global->recursion = 0;
       file->parent->unrecur = 0;
     }
   }
   if (c == '\n')                        /* Maintain current     */
-    ++global->line;			/* line counter 	*/
+    ++global->line;                     /* line counter         */
   if (global->instring)                 /* Strings just return  */
     return (c);                         /* the character.       */
   else if (c == '/') {                  /* Comment?             */
-    global->instring = TRUE;		/* So get() won't loop  */
+    global->instring = TRUE;            /* So get() won't loop  */
 
     /* Check next byte for '*' and if(cplusplus) also '/' */
     if ( (c = get(global)) != '*' )
       if(!global->cplusplus || (global->cplusplus && c!='/')) {
-	global->instring = FALSE;	/* Nope, no comment	*/
-	unget(global);                  /* Push the char. back  */
-	return ('/');                   /* Return the slash     */
+        global->instring = FALSE;       /* Nope, no comment     */
+        unget(global);                  /* Push the char. back  */
+        return ('/');                   /* Return the slash     */
       }
-    
+
     comments = 1;
 
     if (global->keepcomments) {         /* If writing comments   */
@@ -922,100 +823,100 @@ int get(struct Global *global)
       }
 
       if(c=='*') {
-	Putchar(global, '/');           /* Write out the         */
-	Putchar(global, '*');           /*   initializer         */
+        Putchar(global, '/');           /* Write out the         */
+        Putchar(global, '*');           /*   initializer         */
       } else {
-	/* C++ style comment */
-	Putchar(global, '/');           /* Write out the         */
-	Putchar(global, '/');           /*   initializer         */
+        /* C++ style comment */
+        Putchar(global, '/');           /* Write out the         */
+        Putchar(global, '/');           /*   initializer         */
       }
     }
 
     if(global->cplusplus && c=='/') {   /* Eat C++ comment!      */
       do {
-	c=get(global);
-	if(global->keepcomments)
-	  Putchar(global, c);
+        c=get(global);
+        if(global->keepcomments)
+          Putchar(global, c);
       } while(c!='\n' && c!=EOF_CHAR);  /* eat all to EOL or EOF */
-      global->instring = FALSE;	        /* End of comment        */
-      return(c);		        /* Return the end char   */
+      global->instring = FALSE;         /* End of comment        */
+      return(c);                        /* Return the end char   */
     }
 
     for (;;) {                          /* Eat a comment         */
       c = get(global);
     test:
       if (global->keepcomments && c != EOF_CHAR)
-	Putchar(global, c);
+        Putchar(global, c);
       switch (c) {
       case EOF_CHAR:
-	cerror(global, ERROR_EOF_IN_COMMENT);
-	return (EOF_CHAR);
+        cerror(global, ERROR_EOF_IN_COMMENT);
+        return (EOF_CHAR);
 
       case '/':
-	if(global->nestcomments || global->warnnestcomments) {
-	  if((c = get(global)) != '*')
-	    goto test;
-	  if(global->warnnestcomments) {
-	    cwarn(global, WARN_NESTED_COMMENT);
-	  }
-	  if(global->nestcomments)
-	    comments++;
-	}
-	break;
-	
-      case '*':
-	if ((c = get(global)) != '/')     	/* If comment doesn't   */
-	  goto test;			/* end, look at next	*/
-	if (global->keepcomments) {    	/* Put out the comment  */
-	  Putchar(global, c);         	/* terminator, too      */
-	}
-	if(--comments)
-	  /* nested comment, continue! */
-	  break;
+        if(global->nestcomments || global->warnnestcomments) {
+          if((c = get(global)) != '*')
+            goto test;
+          if(global->warnnestcomments) {
+            cwarn(global, WARN_NESTED_COMMENT);
+          }
+          if(global->nestcomments)
+            comments++;
+        }
+        break;
 
-	global->instring = FALSE;	/* End of comment,	*/
-	/*
-	 * A comment is syntactically "whitespace" --
-	 * however, there are certain strange sequences
-	 * such as
-	 *		#define foo(x)  (something)
-	 *			foo|* comment *|(123)
-	 *	     these are '/' ^           ^
-	 * where just returning space (or COM_SEP) will cause
-	 * problems.  This can be "fixed" by overwriting the
-	 * '/' in the input line buffer with ' ' (or COM_SEP)
-	 * but that may mess up an error message.
-	 * So, we peek ahead -- if the next character is
-	 * "whitespace" we just get another character, if not,
-	 * we modify the buffer.  All in the name of purity.
-	 */
-	if (*file->bptr == '\n'
-	    || type[*file->bptr & 0xFF] == SPA)
-	  goto newline;
+      case '*':
+        if ((c = get(global)) != '/')           /* If comment doesn't   */
+          goto test;                    /* end, look at next    */
+        if (global->keepcomments) {     /* Put out the comment  */
+          Putchar(global, c);           /* terminator, too      */
+        }
+        if(--comments)
+          /* nested comment, continue! */
+          break;
+
+        global->instring = FALSE;       /* End of comment,      */
+        /*
+         * A comment is syntactically "whitespace" --
+         * however, there are certain strange sequences
+         * such as
+         *              #define foo(x)  (something)
+         *                      foo|* comment *|(123)
+         *           these are '/' ^           ^
+         * where just returning space (or COM_SEP) will cause
+         * problems.  This can be "fixed" by overwriting the
+         * '/' in the input line buffer with ' ' (or COM_SEP)
+         * but that may mess up an error message.
+         * So, we peek ahead -- if the next character is
+         * "whitespace" we just get another character, if not,
+         * we modify the buffer.  All in the name of purity.
+         */
+        if (*file->bptr == '\n'
+            || type[*file->bptr & 0xFF] == SPA)
+          goto newline;
 #if COMMENT_INVISIBLE
-	/*
-	 * Return magic (old-fashioned) syntactic space.
-	 */
-	return ((file->bptr[-1] = COM_SEP));
+        /*
+         * Return magic (old-fashioned) syntactic space.
+         */
+        return ((file->bptr[-1] = COM_SEP));
 #else
-	return ((file->bptr[-1] = ' '));
+        return ((file->bptr[-1] = ' '));
 #endif
-	
-      case '\n':                	/* we'll need a #line   */
-	if (!global->keepcomments)
-	  global->wrongline = TRUE;	/* later...		*/
-      default:				/* Anything else is	*/
-	break;				/* Just a character	*/
-      }					/* End switch		*/
-    }					/* End comment loop	*/
-  }					/* End if in comment	*/
+
+      case '\n':                        /* we'll need a #line   */
+        if (!global->keepcomments)
+          global->wrongline = TRUE;     /* later...             */
+      default:                          /* Anything else is     */
+        break;                          /* Just a character     */
+      }                                 /* End switch           */
+    }                                   /* End comment loop     */
+  }                                     /* End if in comment    */
   else if (!global->inmacro && c == '\\') { /* If backslash, peek   */
     if ((c = get(global)) == '\n') {    /* for a <nl>.  If so,  */
       global->wrongline = TRUE;
       goto newline;
-    } else {				/* Backslash anything	*/
-      unget(global);                  	/* Get it later         */
-      return ('\\');             	/* Return the backslash */
+    } else {                            /* Backslash anything   */
+      unget(global);                    /* Get it later         */
+      return ('\\');                    /* Return the backslash */
     }
   } else if (c == '\f' || c == VT)      /* Form Feed, Vertical  */
     c = ' ';                            /* Tab are whitespace   */
@@ -1030,17 +931,17 @@ void unget(struct Global *global)
    * without problems, at end of file.  Only one character may
    * be ungotten.  If you need to unget more, call ungetstring().
    */
- 
+
   FILEINFO *file;
   if ((file = global->infile) == NULL)
-    return;			/* Unget after EOF	      */
+    return;                     /* Unget after EOF            */
   if (--file->bptr < file->buffer) {
     cfatal(global, FATAL_TOO_MUCH_PUSHBACK);
     /* This happens only if used the wrong way! */
     return;
   }
-  if (*file->bptr == '\n')        	/* Ungetting a newline?       */
-    --global->line;			/* Unget the line number, too */
+  if (*file->bptr == '\n')              /* Ungetting a newline?       */
+    --global->line;                     /* Unget the line number, too */
 }
 
 ReturnCode ungetstring(struct Global *global, char *text)
@@ -1052,7 +953,7 @@ ReturnCode ungetstring(struct Global *global, char *text)
 
   FILEINFO *file;
   ReturnCode ret;
-  
+
   ret = getfile(global, strlen(text) + 1, "", &file);
   if(!ret)
     strcpy(file->buffer, text);
@@ -1066,7 +967,7 @@ int cget(struct Global *global)
    * token concatenation
    */
 
-  int c;  
+  int c;
   do {
     c = get(global);
 #if COMMENT_INVISIBLE
@@ -1089,7 +990,7 @@ void domsg(struct Global *global,
   /*
    * Print filenames, macro names, and line numbers for error messages.
    */
-  
+
   static char *ErrorMessage[]={
     /*
      * ERRORS:
@@ -1171,18 +1072,18 @@ void domsg(struct Global *global,
     "Out of memory",
     "Too much pushback", /* internal */
     };
-  
+
   char *tp;
   FILEINFO *file;
   char *severity=error<BORDER_ERROR_WARN?"Error":
     error<BORDER_WARN_FATAL?"Warning":
       "Fatal";
-  
+
   for (file = global->infile; file && !file->fp; file = file->parent)
     ;
   tp = file ? file->filename : 0;
   Error(global, "%s\"%s\", line %d: %s: ",
-	MSG_PREFIX, tp, global->infile->fp?global->line:file->line, severity);
+        MSG_PREFIX, tp, global->infile->fp?global->line:file->line, severity);
   if(global->error)
     global->error(global->userdata, ErrorMessage[error], arg);
 #if defined(UNIX)
@@ -1193,26 +1094,26 @@ void domsg(struct Global *global,
     return;
 #endif
   Error(global, "\n");
-  
+
   if (file)   /*OIS*0.92*/
     while ((file = file->parent) != NULL) { /* Print #includes, too */
       tp = file->parent ? "," : ".";
       if (file->fp == NULL)
-	Error(global, " from macro %s%s\n", file->filename, tp);
+        Error(global, " from macro %s%s\n", file->filename, tp);
       else
-	Error(global, " from file %s, line %d%s\n",
-	      (file->progname != NULL) ? file->progname : file->filename,
-	      file->line, tp);
+        Error(global, " from file %s, line %d%s\n",
+              (file->progname != NULL) ? file->progname : file->filename,
+              file->line, tp);
     }
-  
+
   if(error<BORDER_ERROR_WARN)
     /* Error! Increase error counter! */
     global->errors++;
 }
 
 void cerror(struct Global *global,
-	    ErrorCode message,
-	    ...)	/* arguments	*/
+            ErrorCode message,
+            ...)        /* arguments    */
 {
   /*
    * Print a normal error message, string argument.

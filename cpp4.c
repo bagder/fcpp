@@ -19,53 +19,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ******************************************************************************/
-/******************************************************************************
- *                               FREXXWARE
- * ----------------------------------------------------------------------------
- *
- * Project: Frexx C Preprocessor
- * $Source: /home/user/start/cpp/RCS/cpp4.c,v $
- * $Revision: 1.3 $
- * $Date: 1994/06/02 08:50:52 $
- * $Author: start $
- * $State: Exp $
- * $Locker:  $
- *
- * ----------------------------------------------------------------------------
- * $Log: cpp4.c,v $
- * Revision 1.3  1994/06/02  08:50:52  start
- * Changed a few things to make the initial function routine to run
- *
- * Revision 1.2  1994/01/24  09:34:03  start
- * Made a bunch of functions FILE_LOCAL and INLINE.
- *
- * Revision 1.1  1993/11/03  09:13:08  start
- * Initial revision
- *
- *
- *****************************************************************************/
-/*
- *			    C P P 4 . C
- *		M a c r o  D e f i n i t i o n s
- *
- * Edit History
- * 31-Aug-84	MM	USENET net.sources release
- * 04-Oct-84	MM	__LINE__ and __FILE__ must call ungetstring()
- *			so they work correctly with token concatenation.
- *			Added string formal recognition.
- * 25-Oct-84	MM	"Short-circuit" evaluate #if's so that we
- *			don't print unnecessary error messages for
- *			#if !defined(FOO) && FOO != 0 && 10 / FOO ...
- * 31-Oct-84	ado/MM	Added token concatenation
- *  6-Nov-84	MM	Split off eval stuff
- * 21-Oct-85	RMS	Rename `token' to `tokenbuf'.
- *			In doundef, don't complain if arg already not defined.
- * 14-Mar-86	FNF	Incorporate macro based C debugging package.
- *			Port to Commodore AMIGA.
- * 21-Aug-88	Ois	Changed concatenation operator to ##. Changed hand-
- *			ling of tokens following ##. Added new meaning of #.
- */
-
 #include	<stdio.h>
 #include	<ctype.h>
 #include	"cppdef.h"
@@ -265,7 +218,7 @@ ReturnCode dodefine(struct Global *global)
       cerror(global, ERROR_REDEFINE, dp->name);
     }
     if (old != NULL)                  /* We don't need the    */
-      Freemem(old);                   /* old definition now.  */
+      free(old);                      /* old definition now.  */
   }
   return(FPP_OK);
 }

@@ -19,61 +19,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ******************************************************************************/
-/******************************************************************************
- *                               FREXXWARE
- * ----------------------------------------------------------------------------
- *
- * Project: Frexx C Preprocessor
- * $Source: /home/user/start/cpp/RCS/cpp3.c,v $
- * $Revision: 1.6 $
- * $Date: 1994/06/02 08:50:08 $
- * $Author: start $
- * $State: Exp $
- * $Locker:  $
- *
- * ----------------------------------------------------------------------------
- * $Log: cpp3.c,v $
- * Revision 1.6  1994/06/02  08:50:08  start
- * Added the new command line options
- *
- * Revision 1.5  1994/01/24  09:33:15  start
- * Added the FPPTAG_RIGHTCONCAT tag.
- *
- * Revision 1.4  1993/12/06  13:50:39  start
- * A lot of new stuff (too much to mention)
- *
- * Revision 1.4  1993/12/06  13:50:39  start
- * A lot of new stuff (too much to mention)
- *
- * Revision 1.3  1993/11/29  14:00:32  start
- * new
- *
- * Revision 1.2  1993/11/11  07:16:39  start
- * New stuff
- *
- * Revision 1.1  1993/11/03  09:13:08  start
- * Initial revision
- *
- *
- *****************************************************************************/
-/*
- *				C P P 3 . C
- *
- *		    File open and command line options
- *
- * Edit history
- * 13-Nov-84	MM	Split from cpp1.c
- * 21-Oct-85	rms	Make -g command arg not cause an error.
- * 14-Mar-86	FNF	Incorporate macro based C debugging package.
- *			Port to the Commodore AMIGA.
- * 20-Aug-88	Ois	Added __TIME__, and changed __DATE__ to standard.
- */
-
-#include	<stdio.h>
-#include	<ctype.h>
-#include	<time.h>	/*OIS*0.92*/
-#include	"cppdef.h"
-#include	"cpp.h"
+#include        <stdio.h>
+#include        <ctype.h>
+#include        <time.h>        /*OIS*0.92*/
+#include        "cppdef.h"
+#include        "cpp.h"
 
 ReturnCode openfile(struct Global *global, char *filename)
 {
@@ -84,24 +34,24 @@ ReturnCode openfile(struct Global *global, char *filename)
 
   FILE *fp;
   ReturnCode ret;
-  
+
   if ((fp = fopen(filename, "r")) == NULL)
     ret=FPP_OPEN_ERROR;
   else
     ret=addfile(global, fp, filename);
 
   if(!ret && global->showincluded) {
-	  /* no error occured! */
-	  Error(global, "cpp: included \"");
-	  Error(global, filename);
-	  Error(global, "\"\n");
+          /* no error occured! */
+          Error(global, "cpp: included \"");
+          Error(global, filename);
+          Error(global, "\"\n");
   }
   return(ret);
 }
 
 ReturnCode addfile(struct Global *global,
-		   FILE *fp,		/* Open file pointer */
-		   char *filename)	/* Name of the file  */
+                   FILE *fp,            /* Open file pointer */
+                   char *filename)      /* Name of the file  */
 {
   /*
    * Initialize tables for this open file.  This is called from openfile()
@@ -113,14 +63,14 @@ ReturnCode addfile(struct Global *global,
 
   FILEINFO *file;
   ReturnCode ret;
-  
+
   ret = getfile(global, NBUFF, filename, &file);
   if(ret)
     return(ret);
-  file->fp = fp;			/* Better remember FILE *	*/
-  file->buffer[0] = EOS;		/* Initialize for first read	*/
-  global->line = 1;			/* Working on line 1 now	*/
-  global->wrongline = TRUE;		/* Force out initial #line	*/
+  file->fp = fp;                        /* Better remember FILE *       */
+  file->buffer[0] = EOS;                /* Initialize for first read    */
+  global->line = 1;                     /* Working on line 1 now        */
+  global->wrongline = TRUE;             /* Force out initial #line      */
   return(FPP_OK);
 }
 
@@ -179,8 +129,8 @@ int dooptions(struct Global *global, struct fppTag *tags)
       break;
     case FPPTAG_KEEPCOMMENTS:
       if(tags->data) {
-	global->cflag = TRUE;
-	global->keepcomments = TRUE;
+        global->cflag = TRUE;
+        global->keepcomments = TRUE;
       }
       break;
     case FPPTAG_DEFINE:
@@ -188,22 +138,22 @@ int dooptions(struct Global *global, struct fppTag *tags)
        * If the option is just "-Dfoo", make it -Dfoo=1
        */
       {
-	char *symbol=(char *)tags->data;
-	char *text=symbol;
-	while (*text != EOS && *text != '=')
-	  text++;
-	if (*text == EOS)
-	  text = "1";
-	else
-	  *text++ = EOS;
-	/*
-	 * Now, save the word and its definition.
-	 */
-	dp = defendel(global, symbol, FALSE);
-	if(!dp)
-	  return(FPP_OUT_OF_MEMORY);
-	dp->repl = savestring(global, text);
-	dp->nargs = DEF_NOARGS;
+        char *symbol=(char *)tags->data;
+        char *text=symbol;
+        while (*text != EOS && *text != '=')
+          text++;
+        if (*text == EOS)
+          text = "1";
+        else
+          *text++ = EOS;
+        /*
+         * Now, save the word and its definition.
+         */
+        dp = defendel(global, symbol, FALSE);
+        if(!dp)
+          return(FPP_OUT_OF_MEMORY);
+        dp->repl = savestring(global, text);
+        dp->nargs = DEF_NOARGS;
       }
       break;
     case FPPTAG_IGNORE_NONFATAL:
@@ -211,21 +161,21 @@ int dooptions(struct Global *global, struct fppTag *tags)
       break;
     case FPPTAG_INCLUDE_DIR:
       if (global->incend >= &global->incdir[NINCLUDE]) {
-	  cfatal(global, FATAL_TOO_MANY_INCLUDE_DIRS);
-	  return(FPP_TOO_MANY_INCLUDE_DIRS);
+          cfatal(global, FATAL_TOO_MANY_INCLUDE_DIRS);
+          return(FPP_TOO_MANY_INCLUDE_DIRS);
       }
       *global->incend++ = (char *)tags->data;
       break;
     case FPPTAG_INCLUDE_FILE:
     case FPPTAG_INCLUDE_MACRO_FILE:
       if (global->included >= NINCLUDE) {
-	  cfatal(global, FATAL_TOO_MANY_INCLUDE_FILES);
-	  return(FPP_TOO_MANY_INCLUDE_FILES);
+          cfatal(global, FATAL_TOO_MANY_INCLUDE_FILES);
+          return(FPP_TOO_MANY_INCLUDE_FILES);
       }
       global->include[global->included] = (char *)tags->data;
 
       global->includeshow[global->included] =
-	  (tags->tag == FPPTAG_INCLUDE_FILE);
+          (tags->tag == FPPTAG_INCLUDE_FILE);
 
       global->included++;
       break;
@@ -240,45 +190,45 @@ int dooptions(struct Global *global, struct fppTag *tags)
       break;
     case FPPTAG_SIZEOF_TABLE:
       {
-	SIZES *sizp;	/* For -S		*/
-	int size;	/* For -S		*/
-	int isdatum;	/* FALSE for -S*	*/
-	int endtest;	/* For -S		*/
+        SIZES *sizp;    /* For -S               */
+        int size;       /* For -S               */
+        int isdatum;    /* FALSE for -S*        */
+        int endtest;    /* For -S               */
 
-	char *text=(char *)tags->data;
+        char *text=(char *)tags->data;
 
-	sizp = size_table;
-	if (isdatum = (*text != '*')) /* If it's just -S,     */
-	  endtest = T_FPTR;	/* Stop here		*/
-	else {			/* But if it's -S*      */
-	  text++;		/* Step over '*'        */
-	  endtest = 0;		/* Stop at end marker	*/
-	}
-	while (sizp->bits != endtest && *text != EOS) {
-	  if (!isdigit(*text)) {    /* Skip to next digit   */
-	    text++;
-	    continue;
-	  }
-	  size = 0;		/* Compile the value	*/
-	  while (isdigit(*text)) {
-	    size *= 10;
-	    size += (*text++ - '0');
-	  }
-	  if (isdatum)
-	    sizp->size = size;	/* Datum size		*/
-	  else
-	    sizp->psize = size; /* Pointer size 	*/
-	  sizp++;
-	}
-	if (sizp->bits != endtest)
-	  cwarn(global, WARN_TOO_FEW_VALUES_TO_SIZEOF, NULL);
-	else if (*text != EOS)
-	  cwarn(global, WARN_TOO_MANY_VALUES_TO_SIZEOF, NULL);
+        sizp = size_table;
+        if (isdatum = (*text != '*')) /* If it's just -S,     */
+          endtest = T_FPTR;     /* Stop here            */
+        else {                  /* But if it's -S*      */
+          text++;               /* Step over '*'        */
+          endtest = 0;          /* Stop at end marker   */
+        }
+        while (sizp->bits != endtest && *text != EOS) {
+          if (!isdigit(*text)) {    /* Skip to next digit   */
+            text++;
+            continue;
+          }
+          size = 0;             /* Compile the value    */
+          while (isdigit(*text)) {
+            size *= 10;
+            size += (*text++ - '0');
+          }
+          if (isdatum)
+            sizp->size = size;  /* Datum size           */
+          else
+            sizp->psize = size; /* Pointer size         */
+          sizp++;
+        }
+        if (sizp->bits != endtest)
+          cwarn(global, WARN_TOO_FEW_VALUES_TO_SIZEOF, NULL);
+        else if (*text != EOS)
+          cwarn(global, WARN_TOO_MANY_VALUES_TO_SIZEOF, NULL);
       }
       break;
     case FPPTAG_UNDEFINE:
       if (defendel(global, (char *)tags->data, TRUE) == NULL)
-	cwarn(global, WARN_NOT_DEFINED, tags->data);
+        cwarn(global, WARN_NOT_DEFINED, tags->data);
       break;
     case FPPTAG_OUTPUT_DEFINES:
       global->wflag++;
@@ -292,7 +242,7 @@ int dooptions(struct Global *global, struct fppTag *tags)
       break;
     case FPPTAG_OUTPUT:
       global->output=(void (*)(int, void *))tags->data;
-      break;      
+      break;
     case FPPTAG_ERROR:
       global->error=(void (*)(void *, char *, va_list))tags->data;
       break;
@@ -321,8 +271,8 @@ ReturnCode initdefines(struct Global *global)
 {
   /*
    * Initialize the built-in #define's.  There are two flavors:
-   *	#define decus	1		(static definitions)
-   *	#define __FILE__ ??		(dynamic, evaluated by magic)
+   *    #define decus   1               (static definitions)
+   *    #define __FILE__ ??             (dynamic, evaluated by magic)
    * Called only on cpp startup.
    *
    * Note: the built-in static definitions are supressed by the -N option.
@@ -333,15 +283,15 @@ ReturnCode initdefines(struct Global *global)
   char *tp;
   DEFBUF *dp;
   struct tm *tm;
-  
+
   int i;
   time_t tvec;
-  
+
   static char months[12][4] = {
     "Jan", "Feb", "Mar", "Apr", "May", "Jun",
     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
     };
-  
+
   /*
    * Predefine the built-in symbols.  Allow the
    * implementor to pre-define a symbol as "" to
@@ -350,11 +300,11 @@ ReturnCode initdefines(struct Global *global)
   if (!(global->nflag & NFLAG_BUILTIN)) {
     for (pp = global->preset; *pp != NULL; pp++) {
       if (*pp[0] != EOS) {
-	dp = defendel(global, *pp, FALSE);
-	if(!dp)
-	  return(FPP_OUT_OF_MEMORY);
-	dp->repl = savestring(global, "1");
-	dp->nargs = DEF_NOARGS;
+        dp = defendel(global, *pp, FALSE);
+        if(!dp)
+          return(FPP_OUT_OF_MEMORY);
+        dp->repl = savestring(global, "1");
+        dp->nargs = DEF_NOARGS;
       }
     }
   }
@@ -368,7 +318,7 @@ ReturnCode initdefines(struct Global *global)
     for (pp = global->magic, i = DEF_NOARGS; *pp != NULL; pp++) {
       dp = defendel(global, *pp, FALSE);
       if(!dp)
-	return(FPP_OUT_OF_MEMORY);
+        return(FPP_OUT_OF_MEMORY);
       dp->nargs = --i;
     }
 #if OK_DATE
@@ -376,7 +326,7 @@ ReturnCode initdefines(struct Global *global)
      * Define __DATE__ as today's date.
      */
     dp = defendel(global, "__DATE__", FALSE);
-    tp = Getmem(global, 14);
+    tp = malloc(14);
     if(!tp || !dp)
       return(FPP_OUT_OF_MEMORY);
     dp->repl = tp;
@@ -384,23 +334,23 @@ ReturnCode initdefines(struct Global *global)
     time(&tvec);
     tm = localtime(&tvec);
     sprintf(tp, "\"%3s %2d %4d\"",      /* "Aug 20 1988" */
-	    months[tm->tm_mon],
-	    tm->tm_mday,
-	    tm->tm_year + 1900);
-    
+            months[tm->tm_mon],
+            tm->tm_mday,
+            tm->tm_year + 1900);
+
     /*
      * Define __TIME__ as this moment's time.
      */
     dp = defendel(global, "__TIME__", FALSE);
-    tp = Getmem(global, 11);
+    tp = malloc(11);
     if(!tp || !dp)
       return(FPP_OUT_OF_MEMORY);
     dp->repl = tp;
     dp->nargs = DEF_NOARGS;
     sprintf(tp, "\"%2d:%02d:%02d\"",    /* "20:42:31" */
-	    tm->tm_hour,
-	    tm->tm_min,
-	    tm->tm_sec);
+            tm->tm_hour,
+            tm->tm_min,
+            tm->tm_sec);
 #endif
   }
   return(FPP_OK);
@@ -413,8 +363,8 @@ void deldefines(struct Global *global)
    */
   char **pp;
   int i;
-  
-  
+
+
   /*
    * Delete the built-in symbols, unless -WW.
    */
@@ -434,7 +384,7 @@ void deldefines(struct Global *global)
    * Undefine __DATE__.
    */
   defendel(global, "__DATE__", TRUE);
-  
+
   /*
    * Undefine __TIME__.
    */

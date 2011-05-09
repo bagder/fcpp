@@ -19,60 +19,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ******************************************************************************/
-/******************************************************************************
- *                               FREXXWARE
- * ----------------------------------------------------------------------------
- *
- * Project: Frexx C Preprocessor
- * $Source: /home/user/start/cpp/RCS/cpp2.c,v $
- * $Revision: 1.5 $
- * $Date: 1994/01/24 09:32:54 $
- * $Author: start $
- * $State: Exp $
- * $Locker: start $
- *
- * ----------------------------------------------------------------------------
- * $Log: cpp2.c,v $
- * Revision 1.5  1994/01/24  09:32:54  start
- * Fixed AmigaDOS include file routine.
- *
- * Revision 1.4  1993/12/06  13:50:39  start
- * A lot of new stuff (too much to mention)
- *
- * Revision 1.4  1993/12/06  13:50:39  start
- * A lot of new stuff (too much to mention)
- *
- * Revision 1.3  1993/11/29  14:00:32  start
- * new
- *
- * Revision 1.2  1993/11/11  07:16:39  start
- * New stuff
- *
- * Revision 1.1  1993/11/03  09:13:08  start
- * Initial revision
- *
- *
- *****************************************************************************/
-/*
- *              C P P 2 . C
- *
- *             Process #control lines
- *
- * Edit history
- * 13-Nov-84    MM  Split from cpp1.c
- * 21-Oct-85    RMS Do not turn on `instring' while reading #include arg.
- *              Rename `token' to `tokenbuf'.
- *              Flush tabs at end of #include line, like spaces.
- * 14-Mar-86    FNF Incorporate macro based C debugging package.
- *              Port to Commodore AMIGA.
- * 25-May-86    FNF Change handling of fully qualified include file
- *              pathnames (like "/usr/include/stdio.h" for unix,
- *              or "df0:include/stdio.h" for the Amiga) to be
- *              used verbatum in the first open attempt.
- * 20-Aug-88    Ois Added #error. Passed unrecognized # commands.
- *              Added \n when those lines are passed.
- */
-
 #include    <stdio.h>
 #include    <ctype.h>
 #include    "cppdef.h"
@@ -292,7 +238,7 @@ ReturnCode control( struct Global *global,
 
                 if( global->infile->progname != NULL )
                     /* Give up the old name if it's allocated.   */
-                    Freemem( global->infile->progname );
+                    free( global->infile->progname );
 
                 global->infile->progname = savestring( global, tp );
                 }
