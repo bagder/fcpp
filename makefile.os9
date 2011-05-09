@@ -1,0 +1,58 @@
+##############################################################################
+##                              FREXXWARE
+##############################################################################
+##
+## Project: Frexx C Preprocessor
+## $Source: /home/user/start/cpp/RCS/makefile.os9,v $
+## $Revision: 1.1 $
+## $Date: 1993/12/06 13:51:20 $
+## $Author: start $
+## $State: Exp $
+## $Locker: start $
+##
+##############################################################################
+## $Log: makefile.os9,v $
+# Revision 1.1  1993/12/06  13:51:20  start
+# Initial revision
+#
+# Revision 1.1  1993/11/03  09:19:28  start
+# Initial revision
+#
+##
+##############################################################################
+
+# Frexx PreProcessor Makefile
+
+#HOST		=-tp -B/home/danne/code/cpp/ -Wp\,-Q\,-Dunix\,-Ddpc\,-DAIX
+#DEFINES    = -Dunix -Dpdc -DAIX -DUNIX -DDEBUG
+DEFINES     = -Dunix -Dpdc -DOS9 -DUNIX -DDEBUG -DRCS
+DEBUGFLAG	= -g -td=/r0
+LD	        = ld
+LDFLAGS		= -g
+FILECPP     = cpp
+CC          = cc
+LIBDIR      = /h0/ultra/lib
+CFLAGS		= $(DEBUGFLAG) $(DEFINES)
+AR      	= ar
+ARFLAGS 	= rv
+#.SUFFIXES: .o .c .c~ .h .h~ .a .i
+OBJS 		= cpp1.o cpp2.o cpp3.o cpp4.o cpp5.o cpp6.o memory.o
+FILEOBJS 	= cpp1.r cpp2.r cpp3.r cpp4.r cpp5.r cpp6.r memory.r usecpp.r
+
+# ** compile cpp
+#
+
+#all: $(LIB) $(CPP)
+#all: $(FILECPP)
+
+$(FILECPP) : $(FILEOBJS)
+	$(CC) -g $(FILEOBJS) -l=$(LIBDIR)/sys_clib.l -fd=$(FILECPP)
+
+cpp1.r:cpp1.c
+cpp2.r:cpp2.c
+cpp3.r:cpp3.c
+cpp4.r:cpp4.c
+cpp5.r:cpp5.c
+cpp6.r:cpp6.c
+memory.r:memory.c
+
