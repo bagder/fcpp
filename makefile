@@ -28,7 +28,7 @@
 
 #HOST		=-tp -B/home/danne/code/cpp/ -Wp\,-Q\,-Dunix\,-Ddpc\,-DAIX
 #DEFINES    = -Dunix -Dpdc -DAIX -DUNIX -DDEBUG
-DEFINES     = -Dunix -Dpdc -DUNIX -DDEBUG -DRCS
+DEFINES     = -Dunix -Dpdc -DUNIX -DDEBUG
 DEBUGFLAG	= -g
 LD	        = ld
 LDFLAGS		=
