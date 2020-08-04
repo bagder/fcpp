@@ -37,6 +37,7 @@ CPP         = fpp
 FILECPP     = fcpp
 TEMP		= templib.o
 EXPORT		= fpp.exp
+PREFIX      = /usr/local
 CC          = gcc
 CFLAGS		= $(DEBUGFLAG) $(DEFINES)
 AR      	= ar
@@ -84,3 +85,9 @@ tgz:
 	(dir=`pwd`;name=`basename $$dir`;echo Creates $$name.tar.gz; cd .. ; \
 	tar -cf $$name.tar `ls $$name/*.[ch] $$name/*.exp $$name/*.fd $$name/makefile*` ; \
 	gzip $$name.tar ; chmod a+r $$name.tar.gz ; mv $$name.tar.gz $$name/)
+
+install: $(FILECPP)
+	install "$(FILECPP)" "$(DESTDIR)$(PREFIX)/bin"
+
+uninstall:
+	rm -f "$(DESTDIR)$(PREFIX)/bin/$(FILECPP)"
