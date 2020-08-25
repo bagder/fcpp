@@ -356,7 +356,7 @@ ReturnCode initdefines(struct Global *global)
   return(FPP_OK);
 }
 
-void deldefines(struct Global *global)
+void delbuiltindefines(struct Global *global)
 {
   /*
    * Delete the built-in #define's.
