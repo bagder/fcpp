@@ -117,6 +117,11 @@ struct Library *FPPBase=NULL;
 #define DEFAULT_CPP_PREFS_FILE "$HOME/cpp.prefs"
 #endif
 
+#ifdef _MSC_VER
+#define FILE_LOCAL static
+#define PREFIX 
+#endif
+
 FILE_LOCAL char PREFIX *own_input(char *, int, void *);
 FILE_LOCAL void PREFIX own_output(int, void *);
 FILE_LOCAL void PREFIX own_error(void *, char *, va_list);
@@ -276,7 +281,7 @@ char GetPrefs(struct fppTag **tagptr, char **string)
   unsigned  Length_U;
   char     *PrefsBuffer_PC;
   char ret= 0;
-  char *environ;
+ // char *environ;
 
   *string = NULL;
 
@@ -300,12 +305,12 @@ char GetPrefs(struct fppTag **tagptr, char **string)
       return ret;
     }
   }
-
+  /*
   if(environ = getenv("CPP_PREFS")) {
     ret= !DoString(tagptr, environ);
     if(ret && *string)
       free( *string );
-  }
+  }*/
   return ret;
 }
 

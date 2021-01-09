@@ -37,8 +37,11 @@ void __stdargs _XCEXIT(long a) { return; }
 FILE_LOCAL ReturnCode output(struct Global *, int); /* Output one character */
 FILE_LOCAL void sharp(struct Global *);
 INLINE FILE_LOCAL ReturnCode cppmain(struct Global *);
-
+#ifdef _MSC_VER
+int fppPreProcess(struct fppTag *tags)
+#else
 int PREFIX fppPreProcess(REG(a0) struct fppTag *tags)
+#endif
 {
   int i=0;
   ReturnCode ret;       /* cpp return code */
