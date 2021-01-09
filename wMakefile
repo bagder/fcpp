@@ -1,0 +1,20 @@
+TARGET =fcpp.exe
+FLAG= /WX /utf-8 /MP
+
+SOURCES = \
+	cpp1.c		\
+	cpp2.c		\
+	cpp3.c		\
+	cpp4.c		\
+	cpp5.c		\
+	cpp6.c		\
+	usecpp.c
+   
+	
+all: $(TARGET)
+
+$(TARGET):$(SOURCES)
+	cl $(FLAG) /Fe$(TARGET) $(SOURCES)
+	
+clean:
+		del *.exe & del *.obj     

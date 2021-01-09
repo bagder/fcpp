@@ -1,3 +1,5 @@
 fcpp
 *.o
 *~
+*.obj
+*.exe
