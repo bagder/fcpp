@@ -281,7 +281,7 @@ char GetPrefs(struct fppTag **tagptr, char **string)
   unsigned  Length_U;
   char     *PrefsBuffer_PC;
   char ret= 0;
- // char *environ;
+  char *Environ;
 
   *string = NULL;
 
@@ -305,12 +305,12 @@ char GetPrefs(struct fppTag **tagptr, char **string)
       return ret;
     }
   }
-  /*
-  if(environ = getenv("CPP_PREFS")) {
-    ret= !DoString(tagptr, environ);
+
+  if(Environ = getenv("CPP_PREFS")) {
+    ret= !DoString(tagptr, Environ);
     if(ret && *string)
       free( *string );
-  }*/
+  }
   return ret;
 }
 
