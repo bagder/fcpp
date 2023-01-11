@@ -87,7 +87,7 @@ tgz:
 	gzip $$name.tar ; chmod a+r $$name.tar.gz ; mv $$name.tar.gz $$name/)
 
 install: $(FILECPP)
-	install "$(FILECPP)" "$(DESTDIR)$(PREFIX)/bin"
+	install -D "$(FILECPP)" -t "$(DESTDIR)$(PREFIX)/bin"
 
 uninstall:
 	rm -f "$(DESTDIR)$(PREFIX)/bin/$(FILECPP)"
