@@ -3,59 +3,7 @@
  * ----------------------------------------------------------------------------
  *
  * Project: Frexx C Preprocessor
- * $Source: /home/user/start/cpp/RCS/cppdef.h,v $
- * $Revision: 1.4 $
- * $Date: 1993/12/06 13:51:20 $
- * $Author: start $
- * $State: Exp $
- * $Locker: start $
- *
- * ----------------------------------------------------------------------------
- * $Log: cppdef.h,v $
- * Revision 1.4  1993/12/06  13:51:20  start
- * A lot of new stuff (too much to mention)
- *
- * Revision 1.3  1993/11/29  14:01:13  start
- * New features added
- *
- * Revision 1.2  1993/11/11  07:16:39  start
- * New stuff
- *
- * Revision 1.1  1993/11/03  09:15:59  start
- * Initial revision
- *
- *
- *****************************************************************************/
-#ifdef EMACS
-
-/* Use the Emacs config file to find out what type of machine */
-
-#define NO_SHORTNAMES
-
-/* Convert Emacs's conventions for BIG_ENDIAN to cpp's convention.  */
-#ifdef BIG_ENDIAN
-#undef BIG_ENDIAN
-#define BIG_ENDIAN TRUE
-#else /* not BIG_ENDIAN */
-#define BIG_ENDIAN FALSE
-#endif /* BIG_ENDIAN */
-
-/* Emacs uses the names index and rindex and defines them as str(r)chr if nec;
-   cpp uses the opposite convention.  Here we flush the macro definitions for
-   Emacs and add the ones cpp wants.  */
-
-#ifdef index
-#undef index
-#undef rindex
-#else /* index is not defined as a macro */
-#define strchr index
-#define strrchr rindex
-#endif /* index is not defined as a macro */
-
-#define NBUFF 2048
-#define NWORK 2048
-
-#endif /* EMACS */
+ */
 
 /*
  *		   S y s t e m	 D e p e n d e n t
@@ -299,7 +247,7 @@
 #endif
 
 #ifndef NBUFF
-#define NBUFF			512
+#define NBUFF			(512*8)
 #endif
 
 #ifndef NWORK
