@@ -288,7 +288,7 @@ ReturnCode cppmain(struct Global *global)
     unget(global);                      /* Reread the char.     */
     for (;;) {                          /* For the whole line,  */
       do {                              /* Token concat. loop   */
-	for (global->chpos = counter = 0; (type[(c = get(global))] == SPA);) {
+	for (global->chpos = counter = 0; type[(c = get(global))] == SPA;) {
 #if COMMENT_INVISIBLE
 	  if (c != COM_SEP)
 	    counter++;
@@ -309,7 +309,7 @@ ReturnCode cppmain(struct Global *global)
 	    Putstring(global, global->spacebuf); /* Output all whitespaces */
 	  }
 	}
-	if(ret=macroid(global, &c))   /* Grab the token       */
+	if((ret=macroid(global, &c))!=0)   /* Grab the token       */
 	  return(ret);
       } while (type[c] == LET && catenate(global, &ret) && !ret);
       if(ret)

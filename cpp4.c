@@ -143,7 +143,7 @@ ReturnCode dodefine(struct Global *global)
       }
       while (global->workp > global->work && type[global->workp[-1]] == SPA)
 	--global->workp;		/* Erase leading spaces */
-      if(ret=save(global, TOK_SEP))     /* Stuff a delimiter    */
+      if((ret=save(global, TOK_SEP))!=0)     /* Stuff a delimiter    */
 	return(ret);
       c = skipws(global);               /* Eat whitespace       */
       continue;

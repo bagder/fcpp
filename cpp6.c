@@ -193,7 +193,7 @@ ReturnCode macroid(struct Global *global, int *c)
   if (global->infile != NULL && global->infile->fp != NULL)
     global->recursion = 0;
   while (type[*c] == LET && (dp = lookid(global, *c)) != NULL) {
-    if(ret=expand(global, dp))
+    if((ret=expand(global, dp))!=0)
       return(ret);
     *c = get(global);
   }
