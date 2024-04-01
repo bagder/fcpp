@@ -251,7 +251,7 @@
 #endif
 
 #ifndef NWORK
-#define NWORK			512
+#define NWORK			(512*4)
 #endif
 
 #ifndef NEXP
