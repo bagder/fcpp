@@ -198,7 +198,7 @@ int dooptions(struct Global *global, struct fppTag *tags)
         char *text=(char *)tags->data;
 
         sizp = size_table;
-        if (isdatum = (*text != '*')) /* If it's just -S,     */
+        if ((isdatum = (*text != '*'))!=0) /* If it's just -S,     */
           endtest = T_FPTR;     /* Stop here            */
         else {                  /* But if it's -S*      */
           text++;               /* Step over '*'        */

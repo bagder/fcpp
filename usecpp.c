@@ -288,7 +288,7 @@ char GetPrefs(struct fppTag **tagptr, char **string)
     Length_U = ftell(PrefsFile_PF);
     fseek(PrefsFile_PF, 0, SEEK_SET);
 
-    if (*string = (char *)malloc(Length_U+1)) {
+    if ((*string = (char *)malloc(Length_U+1))!=NULL) {
       fread(*string, 1, Length_U, PrefsFile_PF);
       (*string)[Length_U] = '\0';
       
@@ -301,7 +301,7 @@ char GetPrefs(struct fppTag **tagptr, char **string)
     }
   }
 
-  if(environ = getenv("CPP_PREFS")) {
+  if((environ = getenv("CPP_PREFS"))!=NULL) {
     ret= !DoString(tagptr, environ);
     if(ret && *string)
       free( *string );

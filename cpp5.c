@@ -394,7 +394,7 @@ ReturnCode evallex(struct Global *global,
     loop=FALSE;
     do {					/* Collect the token	*/
       c = skipws(global);
-      if(ret=macroid(global, &c))
+      if((ret=macroid(global, &c))!=0)
       return(ret);
       if (c == EOF_CHAR || c == '\n') {
 	unget(global);
@@ -535,7 +535,7 @@ ReturnCode dosizeof(struct Global *global, int *result)
    */
   typecode = 0;
   while ((c = skipws(global))) {
-    if(ret=macroid(global, &c))
+    if((ret=macroid(global, &c))!=0)
       return(ret);
     /* (I) return on fail! */
     if (c  == EOF_CHAR || c == '\n') {
