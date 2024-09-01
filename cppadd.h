@@ -93,16 +93,16 @@ struct Global {
    * form-feed and vertical-tab to space, but returns \<newline>
    * to the caller.  Strictly speaking, this is a bug as \<newline>
    * shouldn't delimit tokens, but we'll worry about that some other
-   * time -- it is more important to prevent infinitly long output lines.
+   * time -- it is more important to prevent infinitely long output lines.
    *
    * instring and inmarcor are parameters to the get() routine which
    * were made global for speed.
    */
   int           instring;       /* TRUE if scanning string      */
   int           inmacro;        /* TRUE if #defining a macro    */
-  
+
   /*
-   * work[] and workp are used to store one piece of text in a temporay
+   * work[] and workp are used to store one piece of text in a temporary
    * buffer.  To initialize storage, set workp = work.  To store one
    * character, call save(c);  (This will fatally exit if there isn't
    * room.)  To terminate the string, call save(EOS).  Note that
@@ -119,7 +119,7 @@ struct Global {
    * the output from cpp is to be passed to lint (which uses commands
    * embedded in comments).  cflag contains the permanent state of the
    * -C flag.  keepcomments is always falsified when processing #control
-   * commands and when compilation is supressed by a false #if
+   * commands and when compilation is suppressed by a false #if
    *
    * If eflag is set, CPP returns "success" even if non-fatal errors
    * were detected.
@@ -164,7 +164,7 @@ struct Global {
    * This is the table used to predefine target machine and operating
    * system designators.        It may need hacking for specific circumstances.
    * Note: it is not clear that this is part of the Ansi Standard.
-   * The -B option supresses preset definitions.
+   * The -B option suppresses preset definitions.
    */
   char  *preset[5];                     /* names defined at cpp start   */
 
@@ -178,7 +178,7 @@ struct Global {
    * This is the variable saying if Cpp should remove C++ style comments from
    * the output. Default is... TRUE, yes, pronto, do it!!!
    */
-  
+
   char cplusplus;
 
   char *sharpfilename;
@@ -239,8 +239,8 @@ struct Global {
 
   char out; /* should we output anything now? */
 
-  char rightconcat; /* should the right part of a concatenation be avaluated
-					   before the concat (TRUE) or after (FALSE) */
+  char rightconcat; /* should the right part of a concatenation be evaluated
+                       before the concat (TRUE) or after (FALSE) */
   char *initialfunc; /* file to include first in all functions */
 
   char *excludedinit[20]; /* functions (names) excluded from the initfunc */

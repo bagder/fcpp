@@ -230,7 +230,7 @@ typedef struct sizes {
  */
 
 #include "fpp.h"    /* structs and defines */
-#include "cppadd.h" /* Added prototypes for ANSI complience! */
+#include "cppadd.h" /* Added prototypes for ANSI compliance! */
 
 #ifdef AMIGA
 #include <dos.h>

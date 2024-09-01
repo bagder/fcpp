@@ -229,7 +229,7 @@
 /*
  * The following definitions are used to allocate memory for
  * work buffers.  In general, they should not be modified
- * by implementors.
+ * by implementers.
  *
  * PAR_MAC	The maximum number of #define parameters (31 per Standard)
  *		Note: we need another one for strings.
@@ -273,7 +273,7 @@
 
 /*
  * Some special constants.  These may need to be changed if cpp
- * is ported to a wierd machine.
+ * is ported to a weird machine.
  *
  * NOTE: if cpp is run on a non-ascii machine, ALERT and VT may
  * need to be changed.	They are used to implement the proposed

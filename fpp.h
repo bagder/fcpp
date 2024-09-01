@@ -90,7 +90,7 @@ struct fppTag {
 #define FPPTAG_INPUT_NAME 11 /* data is string */
 
 /* Input function: */
-#define FPPTAG_INPUT 12 /* data is an input funtion */
+#define FPPTAG_INPUT 12 /* data is an input function */
 
 /* Output function: */
 #define FPPTAG_OUTPUT 13 /* data is an output function */

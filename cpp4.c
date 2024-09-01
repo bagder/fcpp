@@ -458,7 +458,7 @@ ReturnCode expand(struct Global *global, DEFBUF *tokenp)
 	cwarn(global, WARN_WRONG_NUMBER_ARGUMENTS, tokenp->name);
       }
     } else {				/* Collect arguments		*/
-      return(ret); /* We failed in argument colleting! */
+      return(ret); /* We failed in argument collecting! */
     }
   case DEF_NOARGS:			/* No parameters just stuffs	*/
     ret=expstuff(global, tokenp->name, tokenp->repl); /* expand macro   */

@@ -144,8 +144,8 @@ int main(int argc, char **argv)
    * Append system-specific directories to the include directory list.
    * The include directories will be searched through in the same order
    * as you add them in the taglist!
-   * The directory _must_ end with a proper directory speparator!
-   */  
+   * The directory _must_ end with a proper directory separator!
+   */
 
   tagptr->tag=FPPTAG_INCLUDE_DIR;
 #if defined (AMIGA)
@@ -162,7 +162,7 @@ int main(int argc, char **argv)
 
   if( !(i = SetOptions(argc, argv, &tagptr)))
     return(0);
-  
+
   if (argc - i >2) {
     printf("Too many file arguments. Usage: cpp [options] [input [output]]\n");
     return(-1);
@@ -178,9 +178,9 @@ int main(int argc, char **argv)
      */
     if (strcmp(argv[i], "-")) {
       if (freopen(argv[i], "r", stdin) == NULL) {
-	perror(argv[i]);
-	fprintf(stderr, "Can't open input file \"%s\"", argv[i]);
-	return(-2);
+        perror(argv[i]);
+        fprintf(stderr, "Can't open input file \"%s\"", argv[i]);
+        return(-2);
       }
       tagptr->tag=FPPTAG_INPUT_NAME;
       tagptr->data=argv[i];
@@ -559,7 +559,7 @@ int SetOptions(int argc, char **argv, struct fppTag **tagptr)
 	  fprintf(stderr,
 		  "Usage: cpp [options] [infile [outfile] ]\n\n"
 		  "The following options are valid:\n"
-		  "  -B\tNo mahcine specific built-in symbols\n"
+		  "  -B\tNo machine specific built-in symbols\n"
 		  "  -b\tOutput any parentheses, brace or bracket unbalance\n"
 		  "  -C\tWrite source file comments to output\n"
 		  "  -D\tDefine a symbol with the given (optional) value \"symbol[=value]\"\n"

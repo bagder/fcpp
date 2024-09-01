@@ -41,7 +41,7 @@ ReturnCode openfile(struct Global *global, char *filename)
     ret=addfile(global, fp, filename);
 
   if(!ret && global->showincluded) {
-          /* no error occured! */
+          /* no error occurred! */
           Error(global, "cpp: included \"");
           Error(global, filename);
           Error(global, "\"\n");
@@ -275,7 +275,7 @@ ReturnCode initdefines(struct Global *global)
    *    #define __FILE__ ??             (dynamic, evaluated by magic)
    * Called only on cpp startup.
    *
-   * Note: the built-in static definitions are supressed by the -N option.
+   * Note: the built-in static definitions are suppressed by the -N option.
    * __LINE__, __FILE__, __TIME__ and __DATE__ are always present.
    */
 
@@ -294,7 +294,7 @@ ReturnCode initdefines(struct Global *global)
 
   /*
    * Predefine the built-in symbols.  Allow the
-   * implementor to pre-define a symbol as "" to
+   * implementer to pre-define a symbol as "" to
    * eliminate it.
    */
   if (!(global->nflag & NFLAG_BUILTIN)) {

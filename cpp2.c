@@ -465,8 +465,8 @@ ReturnCode doif(struct Global *global, int hash)
      * while #if needs a subroutine of its own to evaluate the expression.
      *
      * doif() is called only if compiling is TRUE.  If false, compilation
-     * is always supressed, so we don't need to evaluate anything.  This
-     * supresses unnecessary warnings.
+     * is always suppressed, so we don't need to evaluate anything.  This
+     * suppresses unnecessary warnings.
      */
 
     int c;
@@ -665,7 +665,7 @@ ReturnCode openinclude( struct Global *global,
 
     /*
      * Look in any directories specified by -I command line
-     * arguments, then in the builtin search list.
+     * arguments, then in the built-in search list.
      */
     for( incptr = global->incdir; incptr < global->incend; incptr++ )
         {
@@ -681,7 +681,7 @@ ReturnCode openinclude( struct Global *global,
             {
             #if HOST == SYS_AMIGADOS
             if( (*incptr)[len-1] != '/' && (*incptr)[len-1] != ':' )
-	            sprintf( tmpname, "%s/%s", *incptr, filename );
+                sprintf( tmpname, "%s/%s", *incptr, filename );
             #else
             if( (*incptr)[len-1] != '/' )
                 sprintf( tmpname, "%s/%s", *incptr, filename );
@@ -693,7 +693,7 @@ ReturnCode openinclude( struct Global *global,
             //
             //  amp July 9, 1997
             //
-            //  OK, hack in multiassign support for the buitin
+            //  OK, hack in multiassign support for the built-in
             //  search directories...
             //
             if( (*incptr)[len-1] == ':' )
@@ -771,7 +771,7 @@ ReturnCode MultiAssignLoad( struct Global *global, char *incptr, char *filename,
         {
         //
         //  This should not bring up a requester.
-        //  check to see if cpp does in fact tweek
+        //  check to see if cpp does in fact tweak
         //  the process WindowPtr.
         //
         DevProc = GetDeviceProc( incptr, DevProc );
@@ -784,7 +784,7 @@ ReturnCode MultiAssignLoad( struct Global *global, char *incptr, char *filename,
             //  Normally we would pass the lock and filename
             //  to the Load() routine, which would CD to the
             //  directory and Open(filename), but in order to
-            //  satisfy the exisiting openfile() function, we
+            //  satisfy the existing openfile() function, we
             //  bite the bullet and build the complete pathspec
             //  rather than add the standard Load() routine.
             //
