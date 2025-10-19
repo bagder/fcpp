@@ -165,7 +165,7 @@ int op;
 #define S_PDOUBLE       (sizeof (double *))
 #endif
 #ifndef S_PFPTR
-#define S_PFPTR         (sizeof (int (*)()))
+#define S_PFPTR         (sizeof (int (*)(void)))
 #endif
 
 
