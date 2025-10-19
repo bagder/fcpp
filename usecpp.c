@@ -116,9 +116,9 @@ struct Library *FPPBase=NULL;
 #define DEFAULT_CPP_PREFS_FILE "$HOME/cpp.prefs"
 #endif
 
-static char PREFIX *own_input(char *, int, void *);
-static void PREFIX own_output(int, void *);
-static void PREFIX own_error(void *, char *, va_list);
+static char PREFIX *own_input(char *buffer, int size, void *userdata);
+static void PREFIX own_output(int c, void *userdata);
+static void PREFIX own_error(void *userdata, char *format, va_list arg);
 static int SetOptions(int, char **, struct fppTag **);
 static char GetPrefs(struct fppTag **, char **);
 static char DoString(struct fppTag **, char *);
