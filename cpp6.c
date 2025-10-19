@@ -250,9 +250,9 @@ int catenate(struct Global *global, ReturnCode *ret)
       break;
     default:                            /* An error, ...        */
       if (isprint(c))
-        cerror(global, ERROR_STRANG_CHARACTER, c);
+        cerror(global, ERROR_STRANGE_CHARACTER, c);
       else
-        cerror(global, ERROR_STRANG_CHARACTER2, c);
+        cerror(global, ERROR_STRANGE_CHARACTER2, c);
       strcpy(global->work, token1);
       unget(global);
       break;
