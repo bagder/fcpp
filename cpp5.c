@@ -35,7 +35,7 @@ INLINE FILE_LOCAL int *evaleval(struct Global *, int *, int, int);
  * Evaluate an #if expression.
  */
 
-static char *opname[] = {		/* For debug and error messages */
+static char *opname[] = {               /* For debug and error messages */
   "end of expression", "val", "id",
   "+",   "-",  "*",  "/",  "%",
   "<<", ">>",  "&",  "|",  "^",
@@ -47,55 +47,55 @@ static char *opname[] = {		/* For debug and error messages */
 /*
  * opdope[] has the operator precedence:
  *     Bits
- *	  7	Unused (so the value is always positive)
- *	6-2	Precedence (000x .. 017x)
- *	1-0	Binary op. flags:
- *	    01	The binop flag should be set/cleared when this op is seen.
- *	    10	The new value of the binop flag.
+ *        7     Unused (so the value is always positive)
+ *      6-2     Precedence (000x .. 017x)
+ *      1-0     Binary op. flags:
+ *          01  The binop flag should be set/cleared when this op is seen.
+ *          10  The new value of the binop flag.
  * Note:  Expected, New binop
- * constant	0	1	Binop, end, or ) should follow constants
- * End of line	1	0	End may not be preceded by an operator
- * binary	1	0	Binary op follows a value, value follows.
- * unary	0	0	Unary op doesn't follow a value, value follows
+ * constant     0       1       Binop, end, or ) should follow constants
+ * End of line  1       0       End may not be preceded by an operator
+ * binary       1       0       Binary op follows a value, value follows.
+ * unary        0       0       Unary op doesn't follow a value, value follows
  *   (          0       0       Doesn't follow value, value or unop follows
- *   )		1	1	Follows value.	Op follows.
+ *   )          1       1       Follows value.  Op follows.
  */
 
 static char opdope[OP_MAX] = {
-  0001, 				/* End of expression		*/
-  0002, 				/* Digit			*/
-  0000, 				/* Letter (identifier)          */
-  0141, 0141, 0151, 0151, 0151, 	/* ADD, SUB, MUL, DIV, MOD	*/
-  0131, 0131, 0101, 0071, 0071, 	/* ASL, ASR, AND,  OR, XOR	*/
-  0111, 0111, 0121, 0121, 0121, 0121,	/*  EQ,  NE,  LT,  LE,	GE,  GT */
-  0061, 0051, 0041, 0041, 0031, 	/* ANA, ORO, QUE, COL, CMA	*/
+  0001,                                 /* End of expression            */
+  0002,                                 /* Digit                        */
+  0000,                                 /* Letter (identifier)          */
+  0141, 0141, 0151, 0151, 0151,         /* ADD, SUB, MUL, DIV, MOD      */
+  0131, 0131, 0101, 0071, 0071,         /* ASL, ASR, AND,  OR, XOR      */
+  0111, 0111, 0121, 0121, 0121, 0121,   /*  EQ,  NE,  LT,  LE,  GE,  GT */
+  0061, 0051, 0041, 0041, 0031,         /* ANA, ORO, QUE, COL, CMA      */
   /*
    * Unary op's follow
    */
-  0160, 0160, 0160, 0160,		/* NEG, PLU, COM, NOT		*/
-  0170, 0013, 0023,			/* LPA, RPA, END		*/
+  0160, 0160, 0160, 0160,               /* NEG, PLU, COM, NOT           */
+  0170, 0013, 0023,                     /* LPA, RPA, END                */
 };
 /*
  * OP_QUE and OP_RPA have alternate precedences:
  */
-#define OP_RPA_PREC	0013
-#define OP_QUE_PREC	0034
+#define OP_RPA_PREC     0013
+#define OP_QUE_PREC     0034
 
 /*
  * S_ANDOR and S_QUEST signal "short-circuit" boolean evaluation, so that
- *	#if FOO != 0 && 10 / FOO ...
+ *      #if FOO != 0 && 10 / FOO ...
  * doesn't generate an error message.  They are stored in optab.skip.
  */
-#define S_ANDOR 	2
-#define S_QUEST 	1
+#define S_ANDOR         2
+#define S_QUEST         1
 
 typedef struct optab {
-  char	op;			/* Operator			*/
-  char	prec;			/* Its precedence		*/
-  char	skip;			/* Short-circuit: TRUE to skip	*/
+  char  op;                     /* Operator                     */
+  char  prec;                   /* Its precedence               */
+  char  skip;                   /* Short-circuit: TRUE to skip  */
 } OPTAB;
-     
-#ifdef	nomacargs
+
+#ifdef  nomacargs
      FILE_LOCAL int
        isbinary(op)
      int op;
@@ -121,69 +121,69 @@ int op;
 #if OK_SIZEOF
 
 #ifndef S_CHAR
-#define S_CHAR		(sizeof (char))
+#define S_CHAR          (sizeof (char))
 #endif
 #ifndef S_SINT
-#ifdef manx		/* Aztec/Manx C does not like "short int" */
-#define S_SINT		(sizeof (short))
+#ifdef manx             /* Aztec/Manx C does not like "short int" */
+#define S_SINT          (sizeof (short))
 #else
-#define S_SINT		(sizeof (short int))
+#define S_SINT          (sizeof (short int))
 #endif
 #endif
 #ifndef S_INT
-#define S_INT		(sizeof (int))
+#define S_INT           (sizeof (int))
 #endif
 #ifndef S_LINT
-#define S_LINT		(sizeof (long int))
+#define S_LINT          (sizeof (long int))
 #endif
 #ifndef S_FLOAT
-#define S_FLOAT 	(sizeof (float))
+#define S_FLOAT         (sizeof (float))
 #endif
 #ifndef S_DOUBLE
-#define S_DOUBLE	(sizeof (double))
+#define S_DOUBLE        (sizeof (double))
 #endif
 #ifndef S_PCHAR
-#define S_PCHAR 	(sizeof (char *))
+#define S_PCHAR         (sizeof (char *))
 #endif
 #ifndef S_PSINT
-#ifdef manx		/* Aztec/Manx C does not like "short int" */
-#define S_PSINT 	(sizeof (short *))
+#ifdef manx             /* Aztec/Manx C does not like "short int" */
+#define S_PSINT         (sizeof (short *))
 #else
-#define S_PSINT 	(sizeof (short int *))
+#define S_PSINT         (sizeof (short int *))
 #endif
 #endif
 #ifndef S_PINT
-#define S_PINT		(sizeof (int *))
+#define S_PINT          (sizeof (int *))
 #endif
 #ifndef S_PLINT
-#define S_PLINT 	(sizeof (long int *))
+#define S_PLINT         (sizeof (long int *))
 #endif
 #ifndef S_PFLOAT
-#define S_PFLOAT	(sizeof (float *))
+#define S_PFLOAT        (sizeof (float *))
 #endif
 #ifndef S_PDOUBLE
-#define S_PDOUBLE	(sizeof (double *))
+#define S_PDOUBLE       (sizeof (double *))
 #endif
 #ifndef S_PFPTR
-#define S_PFPTR 	(sizeof (int (*)()))
+#define S_PFPTR         (sizeof (int (*)()))
 #endif
 
 
 typedef struct types {
-  short	type;			/* This is the bit if		*/
-  char	*name;			/* this is the token word	*/
+  short type;                   /* This is the bit if           */
+  char  *name;                  /* this is the token word       */
 } TYPES;
 
 static TYPES basic_types[] = {
-  { T_CHAR,	"char",         },
-  { T_INT,	"int",          },
-  { T_FLOAT,	"float",        },
-  { T_DOUBLE,	"double",       },
-  { T_SHORT,	"short",        },
-  { T_LONG,	"long",         },
-  { T_SIGNED,	"signed",       },
-  { T_UNSIGNED,	"unsigned",     },
-  { 0,		NULL,		},	/* Signal end		*/
+  { T_CHAR,     "char",         },
+  { T_INT,      "int",          },
+  { T_FLOAT,    "float",        },
+  { T_DOUBLE,   "double",       },
+  { T_SHORT,    "short",        },
+  { T_LONG,     "long",         },
+  { T_SIGNED,   "signed",       },
+  { T_UNSIGNED, "unsigned",     },
+  { 0,          NULL,           },      /* Signal end           */
 };
 
 /*
@@ -194,24 +194,24 @@ static short test_table[] = {
   T_FLOAT | T_DOUBLE | T_CHAR | T_INT,
   T_FLOAT | T_DOUBLE | T_SIGNED | T_UNSIGNED,
   T_LONG  | T_SHORT  | T_CHAR,
-  0						/* end marker	*/
+  0                                             /* end marker   */
   };
 
 /*
  * The order of this table is important -- it is also referenced by
  * the command line processor to allow run-time overriding of the
  * built-in size values.  The order must not be changed:
- *	char, short, int, long, float, double (func pointer)
+ *      char, short, int, long, float, double (func pointer)
  */
 SIZES size_table[] = {
-  { T_CHAR,	S_CHAR, 	S_PCHAR 	},	/* char 	*/
-  { T_SHORT,	S_SINT, 	S_PSINT 	},	/* short int	*/
-  { T_INT,	S_INT,		S_PINT		},	/* int		*/
-  { T_LONG,	S_LINT, 	S_PLINT 	},	/* long 	*/
-  { T_FLOAT,	S_FLOAT,	S_PFLOAT	},	/* float	*/
-  { T_DOUBLE,	S_DOUBLE,	S_PDOUBLE	},	/* double	*/
-  { T_FPTR,	0,		S_PFPTR 	},	/* int (*())    */
-  { 0,		0,		0		},	/* End of table */
+  { T_CHAR,     S_CHAR,         S_PCHAR         },      /* char         */
+  { T_SHORT,    S_SINT,         S_PSINT         },      /* short int    */
+  { T_INT,      S_INT,          S_PINT          },      /* int          */
+  { T_LONG,     S_LINT,         S_PLINT         },      /* long         */
+  { T_FLOAT,    S_FLOAT,        S_PFLOAT        },      /* float        */
+  { T_DOUBLE,   S_DOUBLE,       S_PDOUBLE       },      /* double       */
+  { T_FPTR,     0,              S_PFPTR         },      /* int (*())    */
+  { 0,          0,              0               },      /* End of table */
 };
 
 #endif /* OK_SIZEOF */
@@ -222,31 +222,31 @@ ReturnCode eval(struct Global *global, int *eval)
    * Evaluate an expression.  Straight-forward operator precedence.
    * This is called from control() on encountering an #if statement.
    * It calls the following routines:
-   * evallex	Lexical analyser -- returns the type and value of
-   *		the next input token.
-   * evaleval	Evaluate the current operator, given the values on
-   *		the value stack.  Returns a pointer to the (new)
-   *		value stack.
+   * evallex    Lexical analyser -- returns the type and value of
+   *            the next input token.
+   * evaleval   Evaluate the current operator, given the values on
+   *            the value stack.  Returns a pointer to the (new)
+   *            value stack.
    * For compatibility with older cpp's, this return returns 1 (TRUE)
    * if a syntax error is detected.
    */
-  int op;		/* Current operator		*/
-  int *valp;		/* -> value vector		*/
-  OPTAB *opp;		/* Operator stack		*/
-  int prec;		/* Op precedence		*/
-  int binop;		/* Set if binary op. needed	*/
-  int op1;		/* Operand from stack		*/
-  int skip;		/* For short-circuit testing	*/
-  int value[NEXP];	/* Value stack			*/
-  OPTAB opstack[NEXP];	/* Operand stack		*/
+  int op;               /* Current operator             */
+  int *valp;            /* -> value vector              */
+  OPTAB *opp;           /* Operator stack               */
+  int prec;             /* Op precedence                */
+  int binop;            /* Set if binary op. needed     */
+  int op1;              /* Operand from stack           */
+  int skip;             /* For short-circuit testing    */
+  int value[NEXP];      /* Value stack                  */
+  OPTAB opstack[NEXP];  /* Operand stack                */
   ReturnCode ret;
   char again=TRUE;
-  
+
   valp = value;
   opp = opstack;
-  opp->op = OP_END;		/* Mark bottom of stack 	*/
-  opp->prec = opdope[OP_END];	/* And its precedence		*/
-  opp->skip = 0;		/* Not skipping now		*/
+  opp->op = OP_END;             /* Mark bottom of stack         */
+  opp->prec = opdope[OP_END];   /* And its precedence           */
+  opp->skip = 0;                /* Not skipping now             */
   binop = 0;
 
   while(again) {
@@ -254,25 +254,25 @@ ReturnCode eval(struct Global *global, int *eval)
     if(ret)
       return(ret);
     if (op == OP_SUB && binop == 0)
-      op = OP_NEG;			/* Unary minus		*/
+      op = OP_NEG;                      /* Unary minus          */
     else if (op == OP_ADD && binop == 0)
-      op = OP_PLU;			/* Unary plus		*/
+      op = OP_PLU;                      /* Unary plus           */
     else if (op == OP_FAIL) {
-      *eval=1;                    	/* Error in evallex     */
+      *eval=1;                          /* Error in evallex     */
       return(FPP_OK);
     }
     if (op == DIG) {                      /* Value?               */
       if (binop != 0) {
-	cerror(global, ERROR_MISPLACED_CONSTANT);
-	*eval=1;
-	return(FPP_OK);
+        cerror(global, ERROR_MISPLACED_CONSTANT);
+        *eval=1;
+        return(FPP_OK);
       } else if (valp >= &value[NEXP-1]) {
-	cerror(global, ERROR_IF_OVERFLOW);
-	*eval=1;
-	return(FPP_OK);
+        cerror(global, ERROR_IF_OVERFLOW);
+        *eval=1;
+        return(FPP_OK);
       } else {
-	*valp++ = global->evalue;
-	binop = 1;
+        *valp++ = global->evalue;
+        binop = 1;
       }
       again=TRUE;
       continue;
@@ -290,116 +290,116 @@ ReturnCode eval(struct Global *global, int *eval)
     binop = (prec & 2) >> 1;
     do {
       if (prec > opp->prec) {
-	if (op == OP_LPA)
-	  prec = OP_RPA_PREC;
-	else if (op == OP_QUE)
-	  prec = OP_QUE_PREC;
-	op1 = opp->skip;		/* Save skip for test	*/
-	/*
-	 * Push operator onto op. stack.
-	 */
-	opp++;
-	if (opp >= &opstack[NEXP]) {
-	  cerror(global, ERROR_EXPR_OVERFLOW, opname[op]);
-	  *eval=1;
-	  return(FPP_OK);
-	}
-	opp->op = op;
-	opp->prec = prec;
-	skip = (valp[-1] != 0);         /* Short-circuit tester */
-	/*
-	 * Do the short-circuit stuff here.  Short-circuiting
-	 * stops automagically when operators are evaluated.
-	 */
-	if ((op == OP_ANA && !skip)
-	    || (op == OP_ORO && skip))
-	  opp->skip = S_ANDOR;	/* And/or skip starts	*/
-	else if (op == OP_QUE)          /* Start of ?: operator */
-	  opp->skip = (op1 & S_ANDOR) | ((!skip) ? S_QUEST : 0);
-	else if (op == OP_COL) {        /* : inverts S_QUEST    */
-	  opp->skip = (op1 & S_ANDOR)
-	    | (((op1 & S_QUEST) != 0) ? 0 : S_QUEST);
-	}
-	else {				/* Other ops leave	*/
-	  opp->skip = op1;		/*  skipping unchanged. */
-	}
-	again=TRUE;
-	continue;
+        if (op == OP_LPA)
+          prec = OP_RPA_PREC;
+        else if (op == OP_QUE)
+          prec = OP_QUE_PREC;
+        op1 = opp->skip;                /* Save skip for test   */
+        /*
+         * Push operator onto op. stack.
+         */
+        opp++;
+        if (opp >= &opstack[NEXP]) {
+          cerror(global, ERROR_EXPR_OVERFLOW, opname[op]);
+          *eval=1;
+          return(FPP_OK);
+        }
+        opp->op = op;
+        opp->prec = prec;
+        skip = (valp[-1] != 0);         /* Short-circuit tester */
+        /*
+         * Do the short-circuit stuff here.  Short-circuiting
+         * stops automagically when operators are evaluated.
+         */
+        if ((op == OP_ANA && !skip)
+            || (op == OP_ORO && skip))
+          opp->skip = S_ANDOR;  /* And/or skip starts   */
+        else if (op == OP_QUE)          /* Start of ?: operator */
+          opp->skip = (op1 & S_ANDOR) | ((!skip) ? S_QUEST : 0);
+        else if (op == OP_COL) {        /* : inverts S_QUEST    */
+          opp->skip = (op1 & S_ANDOR)
+            | (((op1 & S_QUEST) != 0) ? 0 : S_QUEST);
+        }
+        else {                          /* Other ops leave      */
+          opp->skip = op1;              /*  skipping unchanged. */
+        }
+        again=TRUE;
+        continue;
       }
       /*
        * Pop operator from op. stack and evaluate it.
        * End of stack and '(' are specials.
        */
-      skip = opp->skip;			/* Remember skip value	*/
+      skip = opp->skip;                 /* Remember skip value  */
       switch ((op1 = opp->op)) {          /* Look at stacked op   */
-      case OP_END:			/* Stack end marker	*/
-	if (op == OP_EOE) {
-	  *eval=valp[-1];     		/* Finished ok.         */
-	  return(FPP_OK);
-	}
-	/* Read another op.	*/
-	again=TRUE;
-	continue;
-      case OP_LPA:			/* ( on stack           */
-	if (op != OP_RPA) {             /* Matches ) on input   */
-	  cerror(global, ERROR_UNBALANCED_PARENS, opname[op]);
-	  *eval=1;
-	  return(FPP_OK);
-	}
-	opp--;				/* Unstack it		*/
-	/* -- Fall through 	*/
+      case OP_END:                      /* Stack end marker     */
+        if (op == OP_EOE) {
+          *eval=valp[-1];               /* Finished ok.         */
+          return(FPP_OK);
+        }
+        /* Read another op.     */
+        again=TRUE;
+        continue;
+      case OP_LPA:                      /* ( on stack           */
+        if (op != OP_RPA) {             /* Matches ) on input   */
+          cerror(global, ERROR_UNBALANCED_PARENS, opname[op]);
+          *eval=1;
+          return(FPP_OK);
+        }
+        opp--;                          /* Unstack it           */
+        /* -- Fall through      */
       case OP_QUE:
-	/* Evaluate true expr.	*/
-	again=TRUE;
-	continue;
-      case OP_COL:			/* : on stack.		*/
-	opp--;				/* Unstack :		*/
-	if (opp->op != OP_QUE) {        /* Matches ? on stack?  */
-	  cerror(global, ERROR_MISPLACED, opname[opp->op]);
-	  *eval=1;
-	  return(FPP_OK);
-	}
-	/*
-	 * Evaluate op1.
-	 */
-      default:				/* Others:		*/
-	opp--;				/* Unstack the operator */
-	valp = evaleval(global, valp, op1, skip);
-	again=FALSE;
-      }					/* op1 switch end	*/
-    } while (!again);			/* Stack unwind loop	*/
+        /* Evaluate true expr.  */
+        again=TRUE;
+        continue;
+      case OP_COL:                      /* : on stack.          */
+        opp--;                          /* Unstack :            */
+        if (opp->op != OP_QUE) {        /* Matches ? on stack?  */
+          cerror(global, ERROR_MISPLACED, opname[opp->op]);
+          *eval=1;
+          return(FPP_OK);
+        }
+        /*
+         * Evaluate op1.
+         */
+      default:                          /* Others:              */
+        opp--;                          /* Unstack the operator */
+        valp = evaleval(global, valp, op1, skip);
+        again=FALSE;
+      }                                 /* op1 switch end       */
+    } while (!again);                   /* Stack unwind loop    */
   }
   return(FPP_OK);
 }
 
 INLINE FILE_LOCAL
 ReturnCode evallex(struct Global *global,
-		   int skip,	/* TRUE if short-circuit evaluation */
-		   int *op)
+                   int skip,    /* TRUE if short-circuit evaluation */
+                   int *op)
 {
   /*
    * Set *op to next eval operator or value. Called from eval(). It
    * calls a special-purpose routines for 'char' strings and
    * numeric values:
-   * evalchar	called to evaluate 'x'
-   * evalnum	called to evaluate numbers.
+   * evalchar   called to evaluate 'x'
+   * evalnum    called to evaluate numbers.
    */
 
   int c, c1, t;
   ReturnCode ret;
   char loop;
-  
+
   do { /* while(loop); */
   /* again: */
     loop=FALSE;
-    do {					/* Collect the token	*/
+    do {                                        /* Collect the token    */
       c = skipws(global);
       if((ret=macroid(global, &c))!=0)
       return(ret);
       if (c == EOF_CHAR || c == '\n') {
-	unget(global);
-	*op=OP_EOE;           /* End of expression    */
-	return(FPP_OK);
+        unget(global);
+        *op=OP_EOE;           /* End of expression    */
+        return(FPP_OK);
       }
     } while ((t = type[c]) == LET && catenate(global, &ret) && !ret);
     if(ret)
@@ -407,35 +407,35 @@ ReturnCode evallex(struct Global *global,
       return(ret);
     if (t == INV) {                         /* Total nonsense       */
       if (!skip) {
-	if (isascii(c) && isprint(c))
-	  cerror(global, ERROR_ILLEGAL_CHARACTER, c);
-	else
-	  cerror(global, ERROR_ILLEGAL_CHARACTER2, c);
+        if (isascii(c) && isprint(c))
+          cerror(global, ERROR_ILLEGAL_CHARACTER, c);
+        else
+          cerror(global, ERROR_ILLEGAL_CHARACTER2, c);
       }
       return(FPP_ILLEGAL_CHARACTER);
     } else if (t == QUO) {                  /* ' or "               */
       if (c == '\'') {                    /* Character constant   */
-	global->evalue = evalchar(global, skip);  /* Somewhat messy       */
-	*op=DIG;                          /* Return a value       */
-	return(FPP_OK);
+        global->evalue = evalchar(global, skip);  /* Somewhat messy       */
+        *op=DIG;                          /* Return a value       */
+        return(FPP_OK);
       }
       cerror(global, ERROR_STRING_IN_IF);
       return(FPP_CANT_USE_STRING_IN_IF);
     } else if (t == LET) {                  /* ID must be a macro   */
       if (streq(global->tokenbuf, "defined")) {   /* Or defined name      */
-	c1 = c = skipws(global);
-	if (c == '(')                     /* Allow defined(name)  */
-	  c = skipws(global);
-	if (type[c] == LET) {
-	  global->evalue = (lookid(global, c) != NULL);
-	  if (c1 != '('                   /* Need to balance      */
-	      || skipws(global) == ')') { /* Did we balance?      */
-	    *op=DIG;
-	    return(FPP_OK);               /* Parsed ok            */
-	  }
-	}
-	cerror(global, ERROR_DEFINED_SYNTAX);
-	return(FPP_BAD_IF_DEFINED_SYNTAX);
+        c1 = c = skipws(global);
+        if (c == '(')                     /* Allow defined(name)  */
+          c = skipws(global);
+        if (type[c] == LET) {
+          global->evalue = (lookid(global, c) != NULL);
+          if (c1 != '('                   /* Need to balance      */
+              || skipws(global) == ')') { /* Did we balance?      */
+            *op=DIG;
+            return(FPP_OK);               /* Parsed ok            */
+          }
+        }
+        cerror(global, ERROR_DEFINED_SYNTAX);
+        return(FPP_BAD_IF_DEFINED_SYNTAX);
       }
 #if OK_SIZEOF
 else if (streq(global->tokenbuf, "sizeof")) { /* New sizeof hackery   */
@@ -457,50 +457,50 @@ else if (streq(global->tokenbuf, "sizeof")) { /* New sizeof hackery   */
       c1 = cget(global);                        /* Peek at next char    */
       switch (c) {
       case '!':
-	if (c1 == '=') {
-	  *op=OP_NE;
-	  return(FPP_OK);
-	}
-	break;
-	
+        if (c1 == '=') {
+          *op=OP_NE;
+          return(FPP_OK);
+        }
+        break;
+
       case '=':
-	if (c1 != '=') {                  /* Can't say a=b in #if */
-	  unget(global);
-	  cerror(global, ERROR_ILLEGAL_ASSIGN);
-	  return (FPP_IF_ERROR);
-	}
-	*op=OP_EQ;
-	return(FPP_OK);
-	
+        if (c1 != '=') {                  /* Can't say a=b in #if */
+          unget(global);
+          cerror(global, ERROR_ILLEGAL_ASSIGN);
+          return (FPP_IF_ERROR);
+        }
+        *op=OP_EQ;
+        return(FPP_OK);
+
       case '>':
       case '<':
-	if (c1 == c) {
-	  *op= ((c == '<') ? OP_ASL : OP_ASR);
-	  return(FPP_OK);
-	} else if (c1 == '=') {
-	  *op= ((c == '<') ? OP_LE  : OP_GE);
-	  return(FPP_OK);
-	}
-	break;
-	
+        if (c1 == c) {
+          *op= ((c == '<') ? OP_ASL : OP_ASR);
+          return(FPP_OK);
+        } else if (c1 == '=') {
+          *op= ((c == '<') ? OP_LE  : OP_GE);
+          return(FPP_OK);
+        }
+        break;
+
       case '|':
       case '&':
-	if (c1 == c) {
-	  *op= ((c == '|') ? OP_ORO : OP_ANA);
-	  return(FPP_OK);
-	}
-	break;
-      
+        if (c1 == c) {
+          *op= ((c == '|') ? OP_ORO : OP_ANA);
+          return(FPP_OK);
+        }
+        break;
+
       case '\\':
-	if (c1 == '\n') {                  /* Multi-line if        */
-	  loop=TRUE;
-	  break;
-	}
-	cerror(global, ERROR_ILLEGAL_BACKSLASH);
-	return(FPP_IF_ERROR);
+        if (c1 == '\n') {                  /* Multi-line if        */
+          loop=TRUE;
+          break;
+        }
+        cerror(global, ERROR_ILLEGAL_BACKSLASH);
+        return(FPP_IF_ERROR);
       }
       if(!loop)
-	unget(global);
+        unget(global);
     }
   } while(loop);
   *op=t;
@@ -515,8 +515,8 @@ ReturnCode dosizeof(struct Global *global, int *result)
   /*
    * Process the sizeof (basic type) operation in an #if string.
    * Sets evalue to the size and returns
-   *	DIG		success
-   *	OP_FAIL 	bad parse or something.
+   *    DIG             success
+   *    OP_FAIL         bad parse or something.
    */
   int c;
   TYPES *tp;
@@ -524,7 +524,7 @@ ReturnCode dosizeof(struct Global *global, int *result)
   short *testp;
   short typecode;
   ReturnCode ret;
-  
+
   if ((c = skipws(global)) != '(') {
     unget(global);
     cerror(global, ERROR_SIZEOF_SYNTAX);
@@ -545,19 +545,19 @@ ReturnCode dosizeof(struct Global *global, int *result)
       return(FPP_SIZEOF_ERROR);
     } else if (c == '(') {                /* thing (*)() func ptr */
       if (skipws(global) == '*'
-	  && skipws(global) == ')') {         /* We found (*)         */
-	if (skipws(global) != '(')            /* Let () be optional   */
-	  unget(global);
-	else if (skipws(global) != ')') {
-	  unget(global);
-	  cerror(global, ERROR_SIZEOF_SYNTAX);
-	  return(FPP_SIZEOF_ERROR);
-	}
-	typecode |= T_FPTR; 		/* Function pointer	*/
-      } else {				/* Junk is a bug	*/
-	unget(global);
-	cerror(global, ERROR_SIZEOF_SYNTAX);
-	return(FPP_SIZEOF_ERROR);
+          && skipws(global) == ')') {         /* We found (*)         */
+        if (skipws(global) != '(')            /* Let () be optional   */
+          unget(global);
+        else if (skipws(global) != ')') {
+          unget(global);
+          cerror(global, ERROR_SIZEOF_SYNTAX);
+          return(FPP_SIZEOF_ERROR);
+        }
+        typecode |= T_FPTR;             /* Function pointer     */
+      } else {                          /* Junk is a bug        */
+        unget(global);
+        cerror(global, ERROR_SIZEOF_SYNTAX);
+        return(FPP_SIZEOF_ERROR);
       }
     }
     else if (type[c] != LET)            /* Exit if not a type   */
@@ -570,19 +570,19 @@ ReturnCode dosizeof(struct Global *global, int *result)
        * a lot of C compilers).
        */
       for (tp = basic_types; tp->name != NULLST; tp++) {
-	if (streq(global->tokenbuf, tp->name))
-	  break;
+        if (streq(global->tokenbuf, tp->name))
+          break;
       }
       if (tp->name == NULLST) {
-	cerror(global, ERROR_SIZEOF_UNKNOWN, global->tokenbuf);
-	return(FPP_SIZEOF_ERROR);
+        cerror(global, ERROR_SIZEOF_UNKNOWN, global->tokenbuf);
+        return(FPP_SIZEOF_ERROR);
       }
-      typecode |= tp->type;		/* Or in the type bit	*/
+      typecode |= tp->type;             /* Or in the type bit   */
     } else if(ret)
       return(ret);
   }
   /*
-   * We are at the end of the type scan.	Chew off '*' if necessary.
+   * We are at the end of the type scan.        Chew off '*' if necessary.
    */
   if (c == '*') {
     typecode |= T_PTR;
@@ -591,22 +591,22 @@ ReturnCode dosizeof(struct Global *global, int *result)
   if (c == ')') {                         /* Last syntax check    */
     for (testp = test_table; *testp != 0; testp++) {
       if (!bittest(typecode & *testp)) {
-	cerror(global, ERROR_SIZEOF_ILLEGAL_TYPE);
-	return(FPP_SIZEOF_ERROR);
+        cerror(global, ERROR_SIZEOF_ILLEGAL_TYPE);
+        return(FPP_SIZEOF_ERROR);
       }
     }
     /*
      * We assume that all function pointers are the same size:
-     *		sizeof (int (*)()) == sizeof (float (*)())
+     *          sizeof (int (*)()) == sizeof (float (*)())
      * We assume that signed and unsigned don't change the size:
-     *		sizeof (signed int) == (sizeof unsigned int)
+     *          sizeof (signed int) == (sizeof unsigned int)
      */
     if ((typecode & T_FPTR) != 0)       /* Function pointer     */
       typecode = T_FPTR | T_PTR;
-    else {				/* Var or var * datum	*/
+    else {                              /* Var or var * datum   */
       typecode &= ~(T_SIGNED | T_UNSIGNED);
       if ((typecode & (T_SHORT | T_LONG)) != 0)
-	typecode &= ~T_INT;
+        typecode &= ~T_INT;
     }
     if ((typecode & ~T_PTR) == 0) {
       cerror(global, ERROR_SIZEOF_NO_TYPE);
@@ -617,12 +617,12 @@ ReturnCode dosizeof(struct Global *global, int *result)
      */
     for (sizp = size_table; sizp->bits != 0; sizp++) {
       if ((typecode & ~T_PTR) == sizp->bits) {
-	global->evalue = ((typecode & T_PTR) != 0)
-	  ? sizp->psize : sizp->size;
-	*result=DIG;
-	return(FPP_OK);
+        global->evalue = ((typecode & T_PTR) != 0)
+          ? sizp->psize : sizp->size;
+        *result=DIG;
+        return(FPP_OK);
       }
-    }					/* We shouldn't fail    */
+    }                                   /* We shouldn't fail    */
     cerror(global, ERROR_SIZEOF_BUG, typecode);
     return(FPP_SIZEOF_ERROR);
   }
@@ -661,7 +661,7 @@ int evalnum(struct Global *global, int c)
   int value;
   int base;
   int c1;
-  
+
   if (c != '0')
     base = 10;
   else if ((c = cget(global)) == 'x' || c == 'X') {
@@ -691,7 +691,7 @@ int evalnum(struct Global *global, int c)
 
 INLINE FILE_LOCAL
 int evalchar(struct Global *global,
-	     int skip)		/* TRUE if short-circuit evaluation	*/
+             int skip)          /* TRUE if short-circuit evaluation     */
      /*
       * Get a character constant
       */
@@ -699,71 +699,71 @@ int evalchar(struct Global *global,
   int c;
   int value;
   int count;
-  
+
   global->instring = TRUE;
   if ((c = cget(global)) == '\\') {
     switch ((c = cget(global))) {
     case 'a':                           /* New in Standard      */
 #if ('a' == '\a' || '\a' == ALERT)
-      value = ALERT;			/* Use predefined value */
+      value = ALERT;                    /* Use predefined value */
 #else
       value = '\a';                   /* Use compiler's value */
 #endif
       break;
-      
+
     case 'b':
       value = '\b';
       break;
-      
+
     case 'f':
       value = '\f';
       break;
-      
+
     case 'n':
       value = '\n';
       break;
-      
+
     case 'r':
       value = '\r';
       break;
-      
+
     case 't':
       value = '\t';
       break;
-      
+
     case 'v':                           /* New in Standard      */
 #if ('v' == '\v' || '\v' == VT)
-      value = VT;			/* Use predefined value */
+      value = VT;                       /* Use predefined value */
 #else
       value = '\v';                   /* Use compiler's value */
 #endif
       break;
-      
+
     case 'x':                           /* '\xFF'               */
       count = 3;
       value = 0;
       while ((((c = get(global)) >= '0' && c <= '9')
-	      || (c >= 'a' && c <= 'f')
-	      || (c >= 'A' && c <= 'F'))
-	     && (--count >= 0)) {
-	value *= 16;
-	value += (c <= '9') ? (c - '0') : ((c & 0xF) + 9);
+              || (c >= 'a' && c <= 'f')
+              || (c >= 'A' && c <= 'F'))
+             && (--count >= 0)) {
+        value *= 16;
+        value += (c <= '9') ? (c - '0') : ((c & 0xF) + 9);
       }
       unget(global);
       break;
-      
+
     default:
       if (c >= '0' && c <= '7') {
-	count = 3;
-	value = 0;
-	while (c >= '0' && c <= '7' && --count >= 0) {
-	  value *= 8;
-	  value += (c - '0');
-	  c = get(global);
-	}
-	unget(global);
+        count = 3;
+        value = 0;
+        while (c >= '0' && c <= '7' && --count >= 0) {
+          value *= 8;
+          value += (c - '0');
+          c = get(global);
+        }
+        unget(global);
       } else
-	value = c;
+        value = c;
       break;
     }
   } else if (c == '\'')
@@ -793,9 +793,9 @@ int evalchar(struct Global *global,
 
 INLINE FILE_LOCAL
 int *evaleval(struct Global *global,
-	      int *valp,
-	      int op,
-	      int skip)		/* TRUE if short-circuit evaluation	*/
+              int *valp,
+              int op,
+              int skip)         /* TRUE if short-circuit evaluation     */
 {
   /*
    * Apply the argument operator to the data on the value stack.
@@ -807,7 +807,7 @@ int *evaleval(struct Global *global,
    * evaleval() returns the new pointer to the top of the value stack.
    */
   int v1, v2;
-  
+
   if (isbinary(op))
     v2 = *--valp;
   v1 = *--valp;
@@ -827,8 +827,8 @@ int *evaleval(struct Global *global,
   case OP_MOD:
     if (v2 == 0) {
       if (!skip) {
-	cwarn(global, WARN_DIVISION_BY_ZERO,
-	      (op == OP_DIV) ? "divide" : "mod");
+        cwarn(global, WARN_DIVISION_BY_ZERO,
+              (op == OP_DIV) ? "divide" : "mod");
       }
       v1 = 0;
     }

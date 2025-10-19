@@ -358,7 +358,7 @@ typedef enum {
 
 /* Nasty defines to make them appear as three different functions! */
 #define cwarn cerror
-#define cfatal cerror 
+#define cfatal cerror
 
 
 /**********************************************************************

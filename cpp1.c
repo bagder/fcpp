@@ -225,40 +225,40 @@ ReturnCode cppmain(struct Global *global)
   while(include--) {
     openinclude(global, global->include[include], TRUE);
   }
-  
+
   for (;;) {
     counter = 0;                        /* Count empty lines    */
     for (;;) {                          /* For each line, ...   */
       global->comment = FALSE;          /* No comment yet!      */
       global->chpos = 0;                /* Count whitespaces    */
       while (type[(c = get(global))] == SPA)  /* Skip leading blanks */
-	if(global->showspace) {
-	  if(global->chpos<MAX_SPACE_SIZE-1)
-	    /* we still have buffer to store this! */
-	    global->spacebuf[global->chpos++]=(char)c;
-	}
+        if(global->showspace) {
+          if(global->chpos<MAX_SPACE_SIZE-1)
+            /* we still have buffer to store this! */
+            global->spacebuf[global->chpos++]=(char)c;
+        }
       if (c == '\n') {                  /* If line's all blank, */
-	if(global->comment) {
-	  /* A comment was output! */
-	  Putchar(global, '\n');
-	}
-	else
-	  ++counter;                    /* Do nothing now       */
+        if(global->comment) {
+          /* A comment was output! */
+          Putchar(global, '\n');
+        }
+        else
+          ++counter;                    /* Do nothing now       */
       }
       else if (c == '#') {              /* Is 1st non-space '#' */
-	global->keepcomments = FALSE;   /* Don't pass comments  */
-	ret = control(global, &counter); /* Yes, do a #command   */
-	if(ret)
-	  return(ret);
-	global->keepcomments = (global->cflag && compiling);
+        global->keepcomments = FALSE;   /* Don't pass comments  */
+        ret = control(global, &counter); /* Yes, do a #command   */
+        if(ret)
+          return(ret);
+        global->keepcomments = (global->cflag && compiling);
       }
       else if (c == EOF_CHAR)           /* At end of file?      */
-	break;
+        break;
       else if (!compiling) {            /* #ifdef false?        */
-	skipnl(global);                 /* Skip to newline      */
-	counter++;                      /* Count it, too.       */
+        skipnl(global);                 /* Skip to newline      */
+        counter++;                      /* Count it, too.       */
       } else {
-	break;                          /* Actual token         */
+        break;                          /* Actual token         */
       }
     }
     if (c == EOF_CHAR)                  /* Exit process at      */
@@ -273,7 +273,7 @@ ReturnCode cppmain(struct Global *global)
         sharp(global);                    /* Output # line number */
       else {                              /* If just a few, stuff */
         while (--counter >= 0)            /* them out ourselves   */
-	  Putchar(global, (int)'\n');
+          Putchar(global, (int)'\n');
       }
     }
     if(global->showspace) {
@@ -281,66 +281,66 @@ ReturnCode cppmain(struct Global *global)
       global->spacebuf[global->chpos] = '\0';
       Putstring(global, global->spacebuf);
     }
-    
+
     /*
      * Process each token on this line.
      */
     unget(global);                      /* Reread the char.     */
     for (;;) {                          /* For the whole line,  */
       do {                              /* Token concat. loop   */
-	for (global->chpos = counter = 0; type[(c = get(global))] == SPA;) {
+        for (global->chpos = counter = 0; type[(c = get(global))] == SPA;) {
 #if COMMENT_INVISIBLE
-	  if (c != COM_SEP)
-	    counter++;
+          if (c != COM_SEP)
+            counter++;
 #else
-	  if(global->showspace && global->chpos < MAX_SPACE_SIZE-1) {
-	    global->spacebuf[global->chpos++]=(char)c;
-	  }
-	  counter++;            /* Skip over blanks     */
+          if(global->showspace && global->chpos < MAX_SPACE_SIZE-1) {
+            global->spacebuf[global->chpos++]=(char)c;
+          }
+          counter++;            /* Skip over blanks     */
 #endif
-	}
-	if (c == EOF_CHAR || c == '\n')
-	  break;                      /* Exit line loop       */
-	else if (counter > 0) {       /* If we got any spaces */
-	  if(!global->showspace)      /* We don't output all spaces */
-	    Putchar(global, (int)' ');/* Output one space     */
-	  else {
-	    global->spacebuf[global->chpos] = '\0';
-	    Putstring(global, global->spacebuf); /* Output all whitespaces */
-	  }
-	}
-	if((ret=macroid(global, &c))!=0)   /* Grab the token       */
-	  return(ret);
+        }
+        if (c == EOF_CHAR || c == '\n')
+          break;                      /* Exit line loop       */
+        else if (counter > 0) {       /* If we got any spaces */
+          if(!global->showspace)      /* We don't output all spaces */
+            Putchar(global, (int)' ');/* Output one space     */
+          else {
+            global->spacebuf[global->chpos] = '\0';
+            Putstring(global, global->spacebuf); /* Output all whitespaces */
+          }
+        }
+        if((ret=macroid(global, &c))!=0)   /* Grab the token       */
+          return(ret);
       } while (type[c] == LET && catenate(global, &ret) && !ret);
       if(ret)
-	/* If the loop was broken because of a fatal error! */
-	return(ret);
+        /* If the loop was broken because of a fatal error! */
+        return(ret);
       if (c == EOF_CHAR || c == '\n') /* From macro exp error */
-	break;                        /* Exit line loop       */
+        break;                        /* Exit line loop       */
       go++;
       switch (type[c]) {
       case LET:
-	go =0;
-	/* Quite ordinary token */
-	Putstring(global, global->tokenbuf);
-	
-	if(!define) {
-	  /* Copy the name */
-	  strncpy(tempfunc, global->tokenbuf, MAX_FUNC_LENGTH);
+        go =0;
+        /* Quite ordinary token */
+        Putstring(global, global->tokenbuf);
+
+        if(!define) {
+          /* Copy the name */
+          strncpy(tempfunc, global->tokenbuf, MAX_FUNC_LENGTH);
           tempfunc[MAX_FUNC_LENGTH]=0;
-	}
-	/* fputs(global->tokenbuf, stdout); */
-	break;
+        }
+        /* fputs(global->tokenbuf, stdout); */
+        break;
       case DIG:                 /* Output a number      */
       case DOT:                 /* Dot may begin floats */
-	go = 0;
-	ret=scannumber(global, c, (ReturnCode(*)(struct Global *, int))output);
-	if(ret)
-	  return(ret);
-	break;
+        go = 0;
+        ret=scannumber(global, c, (ReturnCode(*)(struct Global *, int))output);
+        if(ret)
+          return(ret);
+        break;
       case QUO:                 /* char or string const */
-	go = 0;
-	/* Copy it to output */
+        go = 0;
+        /* Copy it to output */
         if(!global->webmode) {
           ret=scanstring(global, c,
                          (ReturnCode(*)(struct Global *, int))output);
@@ -350,127 +350,127 @@ ReturnCode cppmain(struct Global *global)
         }
         /* FALLTHROUGH */
       default:                  /* Some other character */
-	
-	define++;
-	switch(c) {
-	case '{':
-	  if(! bracelevel++ && define > 2) {
-	    /*
-	     * This is a starting brace. If there is a probability of a
-	     * function defining, we copy the `tempfunc' function name to
-	     * `global->functionname'.
-	     */
-	    strcpy(global->functionname, tempfunc2);
-	    global->funcline = global->line;
 
-		if(global->outputfunctions) {
-			/*
-			 * Output the discovered function name to stderr!
-			 */
-			Error(global, "#> Function defined at line %d: %s <#\n",
-				  global->line,
-				  global->functionname);
-		}
+        define++;
+        switch(c) {
+        case '{':
+          if(! bracelevel++ && define > 2) {
+            /*
+             * This is a starting brace. If there is a probability of a
+             * function defining, we copy the `tempfunc' function name to
+             * `global->functionname'.
+             */
+            strcpy(global->functionname, tempfunc2);
+            global->funcline = global->line;
 
-	    if(global->initialfunc) {
-		int a;
-		for(a=0; a<global->excluded; a++) {
-		    /* check for excluded functions */
-		    if(!strcmp(global->functionname,
-			       global->excludedinit[a]))
-			break;
-		}
-		if(a==global->excluded) {
-		    expstuff(global, "__brace__", "{");
-		    expstuff(global, "__init_func__", global->initialfunc);
-		    initfunc = TRUE;
-		}
-	    }
+                if(global->outputfunctions) {
+                        /*
+                         * Output the discovered function name to stderr!
+                         */
+                        Error(global, "#> Function defined at line %d: %s <#\n",
+                                  global->line,
+                                  global->functionname);
+                }
 
-	  }
-	  break;
-	case '}':
-	  go = 0;
-	  if( (--bracelevel == initfunc) &&
-	     strcmp(global->infile->filename, "__init_func__") ) {
-	    /* we just stepped out of the function! */
-	    global->functionname[0] = '\0';
-	    global->funcline = 0;
-	    define = 1;
+            if(global->initialfunc) {
+                int a;
+                for(a=0; a<global->excluded; a++) {
+                    /* check for excluded functions */
+                    if(!strcmp(global->functionname,
+                               global->excludedinit[a]))
+                        break;
+                }
+                if(a==global->excluded) {
+                    expstuff(global, "__brace__", "{");
+                    expstuff(global, "__init_func__", global->initialfunc);
+                    initfunc = TRUE;
+                }
+            }
 
-	    if(initfunc) {
-	      Putchar(global, '}');
-	      bracelevel--;
-	      initfunc=0;
-	    }
-	  }
-	  fake = 0;
-	  break;
-	  
-	case ';':
-	case ',':
-	  if(go == 2) {
-	    define = 1;
-	    fake = 0;
-	    go--;
-	    break;
-	  }
-	  break;
-	case '(':
-	  if(! parenlevel++ && !bracelevel) {
-	    if(go == 2) {
-	      /* foobar(text) -> "(" is found. This can't be a
-		 function */
-	      go--;
-	      define = 1;
-	      break;
-	    }
-	    if( define < 2 && prev == LET) {
-	      /* This is the first parenthesis on the ground brace
-		 level, and we did previously not have a probable
-		 function name */
-	      strncpy(tempfunc2, global->tokenbuf, MAX_FUNC_LENGTH);
+          }
+          break;
+        case '}':
+          go = 0;
+          if( (--bracelevel == initfunc) &&
+             strcmp(global->infile->filename, "__init_func__") ) {
+            /* we just stepped out of the function! */
+            global->functionname[0] = '\0';
+            global->funcline = 0;
+            define = 1;
+
+            if(initfunc) {
+              Putchar(global, '}');
+              bracelevel--;
+              initfunc=0;
+            }
+          }
+          fake = 0;
+          break;
+
+        case ';':
+        case ',':
+          if(go == 2) {
+            define = 1;
+            fake = 0;
+            go--;
+            break;
+          }
+          break;
+        case '(':
+          if(! parenlevel++ && !bracelevel) {
+            if(go == 2) {
+              /* foobar(text) -> "(" is found. This can't be a
+                 function */
+              go--;
+              define = 1;
+              break;
+            }
+            if( define < 2 && prev == LET) {
+              /* This is the first parenthesis on the ground brace
+                 level, and we did previously not have a probable
+                 function name */
+              strncpy(tempfunc2, global->tokenbuf, MAX_FUNC_LENGTH);
               tempfunc2[MAX_FUNC_LENGTH]=0;
-	      define++;
-	    }
-	    else {
-	      /* we have a fake start */
-	      fake++;
-	    }
-	  }
-	  break;
-	case ')':
-	  if(! --parenlevel && !bracelevel && define>1 && !fake) {
-	    /*
-	     * The starting parentheses level and
-	     * the starting brace level.
-	     * This might be the start of a function defining coming
-	     * up!
-	     */
-	    define++; /* increase probability */
-	    fake = 0;
-	    go = 1;
-	  }
-	  break;
-	case '[':
-	  bracketlevel++;
-	  break;
-	case ']':
-	  bracketlevel--;
-	  break;
-	}
-	define--; /* decrease function probability */
-	
-	Putchar(global, c);     /* Just output it       */
-	break;
+              define++;
+            }
+            else {
+              /* we have a fake start */
+              fake++;
+            }
+          }
+          break;
+        case ')':
+          if(! --parenlevel && !bracelevel && define>1 && !fake) {
+            /*
+             * The starting parentheses level and
+             * the starting brace level.
+             * This might be the start of a function defining coming
+             * up!
+             */
+            define++; /* increase probability */
+            fake = 0;
+            go = 1;
+          }
+          break;
+        case '[':
+          bracketlevel++;
+          break;
+        case ']':
+          bracketlevel--;
+          break;
+        }
+        define--; /* decrease function probability */
+
+        Putchar(global, c);     /* Just output it       */
+        break;
       }                         /* Switch ends          */
       prev = type[c];
     }                           /* Line for loop        */
-    
+
     if (c == '\n') {  /* Compiling at EOL?    */
       Putchar(global, '\n');              /* Output newline, if   */
       if (global->infile->fp == NULL)     /* Expanding a macro,   */
-	global->wrongline = TRUE; /* Output # line later        */
+        global->wrongline = TRUE; /* Output # line later        */
     }
   }                             /* Continue until EOF   */
 

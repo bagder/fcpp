@@ -392,4 +392,3 @@ void deldefines(struct Global *global)
 #endif
   return;
 }
-

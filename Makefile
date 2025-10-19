@@ -9,22 +9,22 @@
 # Frexx PreProcessor Makefile
 
 DEFINES     = -Dunix -Dpdc -DUNIX -DDEBUG
-DEBUGFLAG	= -g
-LD	        = ld
-LDFLAGS		=
+DEBUGFLAG   = -g
+LD          = ld
+LDFLAGS     =
 LIB         = libfpp.a
 CPP         = fpp
 FILECPP     = fcpp
-TEMP		= templib.o
-EXPORT		= fpp.exp
+TEMP        = templib.o
+EXPORT      = fpp.exp
 PREFIX      = /usr/local
 CC          = gcc
-CFLAGS		= $(DEBUGFLAG) $(DEFINES)
-AR      	= ar
-ARFLAGS 	= rv
+CFLAGS      = $(DEBUGFLAG) $(DEFINES)
+AR          = ar
+ARFLAGS     = rv
 .SUFFIXES: .o .c .c~ .h .h~ .a .i
-OBJS 		= cpp1.o cpp2.o cpp3.o cpp4.o cpp5.o cpp6.o
-FILEOBJS 		= cpp1.o cpp2.o cpp3.o cpp4.o cpp5.o cpp6.o usecpp.o
+OBJS        = cpp1.o cpp2.o cpp3.o cpp4.o cpp5.o cpp6.o
+FILEOBJS    = cpp1.o cpp2.o cpp3.o cpp4.o cpp5.o cpp6.o usecpp.o
 
 # ** compile cpp
 #

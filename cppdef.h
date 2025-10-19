@@ -6,8 +6,8 @@
  */
 
 /*
- *		   S y s t e m	 D e p e n d e n t
- *		D e f i n i t i o n s	 f o r	 C P P
+ *                 S y s t e m   D e p e n d e n t
+ *              D e f i n i t i o n s    f o r   C P P
  *
  * Definitions in this file may be edited to configure CPP for particular
  * host operating systems and target configurations.
@@ -25,30 +25,30 @@
  * a limitation of Decus C.
  */
 #ifndef TRUE
-#define TRUE			1
-#define FALSE			0
+#define TRUE                    1
+#define FALSE                   0
 #endif
 
 /*
  * Define the HOST operating system.  This is needed so that
  * cpp can use appropriate filename conventions.
  */
-#define SYS_UNKNOWN		0
-#define SYS_UNIX		1
-#define SYS_VMS 		2
-#define SYS_RSX 		3
-#define SYS_RT11		4
-#define SYS_LATTICE		5
-#define SYS_ONYX		6
-#define SYS_68000		7
-#define SYS_AMIGADOS		8
+#define SYS_UNKNOWN             0
+#define SYS_UNIX                1
+#define SYS_VMS                 2
+#define SYS_RSX                 3
+#define SYS_RT11                4
+#define SYS_LATTICE             5
+#define SYS_ONYX                6
+#define SYS_68000               7
+#define SYS_AMIGADOS            8
 
 #ifndef HOST
-#ifdef	unix
-#define HOST			SYS_UNIX
+#ifdef  unix
+#define HOST                    SYS_UNIX
 #else
-#ifdef	amiga
-#define HOST			SYS_AMIGADOS
+#ifdef  amiga
+#define HOST                    SYS_AMIGADOS
 #endif
 #endif
 #endif
@@ -57,68 +57,68 @@
  * We assume that the target is the same as the host system
  */
 #ifndef TARGET
-#define TARGET			HOST
+#define TARGET                  HOST
 #endif
 
 /*
  * In order to predefine machine-dependent constants,
  * several strings are defined here:
  *
- * MACHINE	defines the target cpu (by name)
- * SYSTEM	defines the target operating system
- * COMPILER	defines the target compiler
+ * MACHINE      defines the target cpu (by name)
+ * SYSTEM       defines the target operating system
+ * COMPILER     defines the target compiler
  *
- *	The above may be #defined as "" if they are not wanted.
- *	They should not be #defined as NULL.
+ *      The above may be #defined as "" if they are not wanted.
+ *      They should not be #defined as NULL.
  *
- * LINE_PREFIX	defines the # output line prefix, if not "line"
- *		This should be defined as "" if cpp is to replace
- *		the "standard" C pre-processor.
+ * LINE_PREFIX  defines the # output line prefix, if not "line"
+ *              This should be defined as "" if cpp is to replace
+ *              the "standard" C pre-processor.
  */
-#define LINE_PREFIX		"line"
+#define LINE_PREFIX             "line"
 /*
- * FILE_LOCAL	marks functions which are referenced only in the
- *		file they reside.  Some C compilers allow these
- *		to be marked "static" even though they are referenced
- *		by "extern" statements elsewhere.
+ * FILE_LOCAL   marks functions which are referenced only in the
+ *              file they reside.  Some C compilers allow these
+ *              to be marked "static" even though they are referenced
+ *              by "extern" statements elsewhere.
  *
- * OK_DOLLAR	Should be set TRUE if $ is a valid alphabetic character
- *		in identifiers (default), or zero if $ is invalid.
- *		Default is TRUE.
+ * OK_DOLLAR    Should be set TRUE if $ is a valid alphabetic character
+ *              in identifiers (default), or zero if $ is invalid.
+ *              Default is TRUE.
  *
- * OK_CONCAT	Should be set TRUE if # may be used to concatenate
- *		tokens in macros (per the Ansi Draft Standard) or
- *		FALSE for old-style # processing (needed if cpp is
- *		to process assembler source code).
+ * OK_CONCAT    Should be set TRUE if # may be used to concatenate
+ *              tokens in macros (per the Ansi Draft Standard) or
+ *              FALSE for old-style # processing (needed if cpp is
+ *              to process assembler source code).
  */
 #define OK_CONCAT TRUE
 /*
- * OK_DATE	Predefines the compilation date if set TRUE.
- *		Not permitted by the Nov. 12, 1984 Draft Standard.
+ * OK_DATE      Predefines the compilation date if set TRUE.
+ *              Not permitted by the Nov. 12, 1984 Draft Standard.
  */
 #define OK_DATE TRUE
 /*
  *
- * OK_SIZEOF	Permits sizeof in #if preprocessor expressions.
- *		According to K&R V2 (page 232), this is not allowed.
+ * OK_SIZEOF    Permits sizeof in #if preprocessor expressions.
+ *              According to K&R V2 (page 232), this is not allowed.
  */
 #define OK_SIZEOF TRUE
 /*
- * S_CHAR etc.	Define the sizeof the basic TARGET machine word types.
- *		By default, sizes are set to the values for the HOST
- *		computer.  If this is inappropriate, see the code in
- *		cpp3.c for details on what to change.  Also, if you
- *		have a machine where sizeof (signed int) differs from
- *		sizeof (unsigned int), you will have to edit code and
- *		tables in cpp3.c (and extend the -S option definition.)
+ * S_CHAR etc.  Define the sizeof the basic TARGET machine word types.
+ *              By default, sizes are set to the values for the HOST
+ *              computer.  If this is inappropriate, see the code in
+ *              cpp3.c for details on what to change.  Also, if you
+ *              have a machine where sizeof (signed int) differs from
+ *              sizeof (unsigned int), you will have to edit code and
+ *              tables in cpp3.c (and extend the -S option definition.)
  *
- * CPP_LIBRARY	May be defined if you have a site-specific include directory
- *		which is to be searched *before* the operating-system
- *		specific directories.
+ * CPP_LIBRARY  May be defined if you have a site-specific include directory
+ *              which is to be searched *before* the operating-system
+ *              specific directories.
  */
 
-#define MACHINE 		"amiga", "m68000"
-#define SYSTEM			"amigados"
+#define MACHINE                 "amiga", "m68000"
+#define SYSTEM                  "amigados"
 
 
 /*
@@ -126,7 +126,7 @@
  */
 
 #ifndef MSG_PREFIX
-#define MSG_PREFIX		"cpp: "
+#define MSG_PREFIX              "cpp: "
 #endif
 
 /*
@@ -135,10 +135,10 @@
  * an old-style preprocessor.
  */
 
-#if	OLD_PREPROCESSOR
-#define OK_DOLLAR		FALSE
-#define OK_CONCAT		FALSE
-#define COMMENT_INVISIBLE	TRUE
+#if     OLD_PREPROCESSOR
+#define OK_DOLLAR               FALSE
+#define OK_CONCAT               FALSE
+#define COMMENT_INVISIBLE       TRUE
 #endif
 
 /*
@@ -153,7 +153,7 @@
  * it is needed only for multi-byte character constants.
  */
 #ifndef BITS_CHAR
-#define BITS_CHAR		8
+#define BITS_CHAR               8
 #endif
 
 /*
@@ -165,17 +165,17 @@
  * [I *seems* to be the other way around, according to the code /OIS]
  */
 #ifndef BIG_ENDIAN
-#define BIG_ENDIAN		FALSE
+#define BIG_ENDIAN              FALSE
 #endif
 
 /*
  * COMMENT_INVISIBLE may be defined to allow "old-style" comment
  * processing, whereby the comment becomes a zero-length token
  * delimiter.  This permitted tokens to be concatenated in macro
- * expansions.	This was removed from the Draft Ansi Standard.
+ * expansions.  This was removed from the Draft Ansi Standard.
  */
 #ifndef COMMENT_INVISIBLE
-#define COMMENT_INVISIBLE	FALSE
+#define COMMENT_INVISIBLE       FALSE
 #endif
 
 /*
@@ -186,7 +186,7 @@
  * sets OK_DOLLAR FALSE for that reason.
  */
 #ifndef OK_DOLLAR
-#define OK_DOLLAR		TRUE
+#define OK_DOLLAR               TRUE
 #endif
 
 /*
@@ -195,7 +195,7 @@
  * set FALSE as the concatenation character, #, is used by the assembler.
  */
 #ifndef OK_CONCAT
-#define OK_CONCAT		TRUE
+#define OK_CONCAT               TRUE
 #endif
 
 /*
@@ -204,7 +204,7 @@
  * by the Draft Ansi Standard.
  */
 #ifndef OK_DATE
-#define OK_DATE 	TRUE
+#define OK_DATE         TRUE
 #endif
 
 /*
@@ -215,7 +215,7 @@
  * This option was added in the PDC process, under no. *OIS*0.92*.
  */
 #ifndef OK_SIZEOF
-#define OK_SIZEOF	FALSE
+#define OK_SIZEOF       FALSE
 #endif
 
 /*
@@ -223,7 +223,7 @@
  */
 
 #ifndef DEBUG
-#define DEBUG		FALSE
+#define DEBUG           FALSE
 #endif
 
 /*
@@ -231,43 +231,43 @@
  * work buffers.  In general, they should not be modified
  * by implementers.
  *
- * PAR_MAC	The maximum number of #define parameters (31 per Standard)
- *		Note: we need another one for strings.
- * NBUFF	Input buffer size
- * NWORK	Work buffer size -- the longest macro
- *		must fit here after expansion.
- * NEXP 	The nesting depth of #if expressions
- * NINCLUDE	The number of directories that may be specified
- *		on a per-system basis, or by the -I option.
- * BLK_NEST	The number of nested #if's permitted.
+ * PAR_MAC      The maximum number of #define parameters (31 per Standard)
+ *              Note: we need another one for strings.
+ * NBUFF        Input buffer size
+ * NWORK        Work buffer size -- the longest macro
+ *              must fit here after expansion.
+ * NEXP         The nesting depth of #if expressions
+ * NINCLUDE     The number of directories that may be specified
+ *              on a per-system basis, or by the -I option.
+ * BLK_NEST     The number of nested #if's permitted.
  */
 
 #ifndef PAR_MAC
-#define PAR_MAC 	   (31 + 1)
+#define PAR_MAC            (31 + 1)
 #endif
 
 #ifndef NBUFF
-#define NBUFF			(512*8)
+#define NBUFF                   (512*8)
 #endif
 
 #ifndef NWORK
-#define NWORK			(512*4)
+#define NWORK                   (512*4)
 #endif
 
 #ifndef NEXP
-#define NEXP			128
+#define NEXP                    128
 #endif
 
 #ifndef NINCLUDE
-#define NINCLUDE		  20
+#define NINCLUDE                  20
 #endif
 
 #ifndef NPARMWORK
-#define NPARMWORK		(NWORK * 2)
+#define NPARMWORK               (NWORK * 2)
 #endif
 
 #ifndef BLK_NEST
-#define BLK_NEST		32
+#define BLK_NEST                32
 #endif
 
 
@@ -276,7 +276,7 @@
  * is ported to a weird machine.
  *
  * NOTE: if cpp is run on a non-ascii machine, ALERT and VT may
- * need to be changed.	They are used to implement the proposed
+ * need to be changed.  They are used to implement the proposed
  * ANSI standard C control characters '\a' and '\v' only.
  * DEL is used to tag macro tokens to prevent #define foo foo
  * from looping.  Note that we don't try to prevent more elaborate
@@ -284,11 +284,11 @@
  */
 
 #ifndef ALERT
-#define ALERT			'\007'          /* '\a' is "Bell"       */
+#define ALERT                   '\007'          /* '\a' is "Bell"       */
 #endif
 
 #ifndef VT
-#define VT			'\013'          /* Vertical Tab CTRL/K  */
+#define VT                      '\013'          /* Vertical Tab CTRL/K  */
 #endif
 
 /*
@@ -297,7 +297,7 @@
  */
 
 #ifndef FILE_LOCAL
-#define FILE_LOCAL		static		/* file-unique globals */
+#define FILE_LOCAL              static          /* file-unique globals */
 #endif
 
 /*
