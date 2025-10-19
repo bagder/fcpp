@@ -222,7 +222,7 @@ ReturnCode control( struct Global *global,
              */
             global->line = atoi(global->work) - 1;     /* Reset line number    */
 
-            for( tp = global->work; isdigit(*tp) || type[*tp] == SPA; tp++)
+            for( tp = global->work; isdigit(*tp) || type[(int)*tp] == SPA; tp++)
                 ;             /* Skip over digits */
 
             if( *tp != EOS )

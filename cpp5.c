@@ -355,7 +355,7 @@ ReturnCode eval(struct Global *global, int *eval)
       case OP_COL:                      /* : on stack.          */
         opp--;                          /* Unstack :            */
         if (opp->op != OP_QUE) {        /* Matches ? on stack?  */
-          cerror(global, ERROR_MISPLACED, opname[opp->op]);
+          cerror(global, ERROR_MISPLACED, opname[(int)opp->op]);
           *eval=1;
           return(FPP_OK);
         }

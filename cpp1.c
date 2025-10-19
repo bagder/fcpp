@@ -223,7 +223,7 @@ ReturnCode cppmain(struct Global *global)
   include = global->included;
 
   while(include--) {
-    openinclude(global, global->include[include], TRUE);
+    openinclude(global, global->include[(int)include], TRUE);
   }
 
   for (;;) {

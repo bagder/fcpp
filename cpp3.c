@@ -172,9 +172,9 @@ int dooptions(struct Global *global, struct fppTag *tags)
           cfatal(global, FATAL_TOO_MANY_INCLUDE_FILES);
           return(FPP_TOO_MANY_INCLUDE_FILES);
       }
-      global->include[global->included] = (char *)tags->data;
+      global->include[(int)global->included] = (char *)tags->data;
 
-      global->includeshow[global->included] =
+      global->includeshow[(int)global->included] =
           (tags->tag == FPPTAG_INCLUDE_FILE);
 
       global->included++;

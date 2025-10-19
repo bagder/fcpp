@@ -141,7 +141,7 @@ ReturnCode dodefine(struct Global *global)
         quoting = 1;                    /* Maybe quoting op.    */
         continue;
       }
-      while (global->workp > global->work && type[global->workp[-1]] == SPA)
+      while (global->workp > global->work && type[(int)global->workp[-1]] == SPA)
         --global->workp;                /* Erase leading spaces */
       if((ret=save(global, TOK_SEP))!=0)     /* Stuff a delimiter    */
         return(ret);
