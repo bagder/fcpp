@@ -79,9 +79,6 @@ SOFTWARE.
 struct Library *FPPBase=NULL;
 #define PREFIX __saveds
 #define REG(x) register __ ## x
-#else
-#define PREFIX
-#define REG(x)
 #endif
 
 #elif defined(UNIX)
@@ -93,8 +90,6 @@ struct Library *FPPBase=NULL;
 #include <sys/unistd.h> /* for BSD systems (SUN OS at least) */
 #endif
 #endif
-#define PREFIX
-#define REG(x)
 #endif
 #include <stdio.h>
 #include <string.h>
@@ -104,6 +99,13 @@ struct Library *FPPBase=NULL;
 #include <stdarg.h>
 #else
 #define va_list void *
+#endif
+
+#ifndef PREFIX
+#define PREFIX
+#endif
+#ifndef REG
+#define REG(x)
 #endif
 
 #include "fpp.h"
