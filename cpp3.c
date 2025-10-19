@@ -41,10 +41,10 @@ ReturnCode openfile(struct Global *global, char *filename)
     ret=addfile(global, fp, filename);
 
   if(!ret && global->showincluded) {
-          /* no error occurred! */
-          Error(global, "cpp: included \"");
-          Error(global, filename);
-          Error(global, "\"\n");
+    /* no error occurred! */
+    Error(global, "cpp: included \"");
+    Error(global, filename);
+    Error(global, "\"\n");
   }
   return(ret);
 }
@@ -107,7 +107,7 @@ int dooptions(struct Global *global, struct fppTag *tags)
       global->warnnoinclude = tags->data?1:0;
       break;
     case FPPTAG_WARN_NESTED_COMMENTS:
-      global->warnnestcomments =  tags->data?1:0;
+      global->warnnestcomments = tags->data?1:0;
       break;
     case FPPTAG_OUTPUTSPACE:
       global->showspace = tags->data?1:0;
@@ -161,16 +161,16 @@ int dooptions(struct Global *global, struct fppTag *tags)
       break;
     case FPPTAG_INCLUDE_DIR:
       if (global->incend >= &global->incdir[NINCLUDE]) {
-          cfatal(global, FATAL_TOO_MANY_INCLUDE_DIRS);
-          return(FPP_TOO_MANY_INCLUDE_DIRS);
+        cfatal(global, FATAL_TOO_MANY_INCLUDE_DIRS);
+        return(FPP_TOO_MANY_INCLUDE_DIRS);
       }
       *global->incend++ = (char *)tags->data;
       break;
     case FPPTAG_INCLUDE_FILE:
     case FPPTAG_INCLUDE_MACRO_FILE:
       if (global->included >= NINCLUDE) {
-          cfatal(global, FATAL_TOO_MANY_INCLUDE_FILES);
-          return(FPP_TOO_MANY_INCLUDE_FILES);
+        cfatal(global, FATAL_TOO_MANY_INCLUDE_FILES);
+        return(FPP_TOO_MANY_INCLUDE_FILES);
       }
       global->include[(int)global->included] = (char *)tags->data;
 
@@ -290,7 +290,7 @@ ReturnCode initdefines(struct Global *global)
   static char months[12][4] = {
     "Jan", "Feb", "Mar", "Apr", "May", "Jun",
     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-    };
+  };
 
   /*
    * Predefine the built-in symbols.  Allow the
