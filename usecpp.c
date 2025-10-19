@@ -274,7 +274,6 @@ char GetPrefs(struct fppTag **tagptr, char **string)
   
   FILE     *PrefsFile_PF;
   unsigned  Length_U;
-  char     *PrefsBuffer_PC;
   char ret= 0;
   char *environ;
 
@@ -283,7 +282,7 @@ char GetPrefs(struct fppTag **tagptr, char **string)
   /* Open prefs file for read */
   if ( (PrefsFile_PF = fopen(CPP_PREFS_FILE, "r")) ||
       (PrefsFile_PF = fopen(DEFAULT_CPP_PREFS_FILE, "r"))) {
-    
+
     fseek(PrefsFile_PF, 0 , SEEK_END);
     Length_U = ftell(PrefsFile_PF);
     fseek(PrefsFile_PF, 0, SEEK_SET);
