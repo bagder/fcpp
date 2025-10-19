@@ -65,8 +65,8 @@ struct fppTag {
 #define FPPTAG_IGNORE_NONFATAL 3 /* data is TRUE or FALSE */
 
 /* To add an include directory to the include directory list: */
-#define FPPTAG_INCLUDE_DIR 4 /* data is directory name ending with a '/' (on
-				amiga a ':' is also valid) */
+#define FPPTAG_INCLUDE_DIR 4 /* data is directory name ending with a '/'
+                                (on amiga a ':' is also valid) */
 
 /* To define all machine specific built-in #defines, default is TRUE: */
 #define FPPTAG_BUILTINS 5 /* data is TRUE or FALSE */
@@ -103,7 +103,7 @@ struct fppTag {
 
 /* Error function. This is called when FPP finds any warning/error/fatal: */
 #define FPPTAG_ERROR 16 /* data is function pointer to a
-			   "void (*)(void *, char *, va_list)" */
+                           "void (*)(void *, char *, va_list)" */
 
 /* Whether to warn for illegal cpp instructions */
 #define FPPTAG_WARNILLEGALCPP 17 /* data is boolean, default is FALSE */
