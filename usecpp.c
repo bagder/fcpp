@@ -271,7 +271,6 @@ void PREFIX own_error(void *userdata, char *format, va_list arg)
 FILE_LOCAL
 char GetPrefs(struct fppTag **tagptr, char **string)
 {
-  
   FILE     *PrefsFile_PF;
   unsigned  Length_U;
   char ret= 0;
@@ -290,7 +289,7 @@ char GetPrefs(struct fppTag **tagptr, char **string)
     if ((*string = (char *)malloc(Length_U+1))!=NULL) {
       fread(*string, 1, Length_U, PrefsFile_PF);
       (*string)[Length_U] = '\0';
-      
+
       ret = !DoString(tagptr, *string);
     }
     fclose(PrefsFile_PF);
@@ -325,10 +324,10 @@ char DoString(struct fppTag **tagptr, char *string)
     do {
       string++;
       if(*string=='\"') {
-	do
-	  string++;
-	while(*string != '\"');
-	string++;
+        do
+          string++;
+        while(*string != '\"');
+        string++;
       }
     } while(*string && *string!=' ' && *string != '\n' && *string != '\t');
     argc++;
@@ -355,7 +354,7 @@ int SetOptions(int argc, char **argv, struct fppTag **tagptr)
       char c = *ap++;
 
       if(display)
-	fprintf(stderr, "cpp: option: %s\n", ap-2);
+        fprintf(stderr, "cpp: option: %s\n", ap-2);
 
       switch (c) {                    /* Command character    */
       case 'Q':			      /* ignore unknown flags but */
