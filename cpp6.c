@@ -26,7 +26,6 @@ SOFTWARE.
 
 INLINE FILE_LOCAL void outadefine(struct Global *, DEFBUF *);
 INLINE FILE_LOCAL void domsg(struct Global *, ErrorCode, va_list);
-FILE_LOCAL char *incmem(struct Global *, char *, int);
 
 /*
  * skipnl()     skips over input text to the end of the line.
