@@ -254,18 +254,21 @@ int main(int argc, char **argv)
 static
 char PREFIX *own_input(char *buffer, int size, void *userdata)
 {
+  (void)userdata;
   return(fgets(buffer, size, stdin));
 }
 
 static
 void PREFIX own_output(int c, void *userdata)
 {
+  (void)userdata;
   putchar(c);
 }
 
 static
 void PREFIX own_error(void *userdata, char *format, va_list arg)
 {
+  (void)userdata;
   vfprintf(stderr, format, arg);
 }
 

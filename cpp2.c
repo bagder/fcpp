@@ -628,7 +628,6 @@ ReturnCode openinclude( struct Global *global,
     char **incptr;
     char tmpname[NWORK]; /* Filename work area    */
     int len;
-    ReturnCode ret;
 
     #if HOST == SYS_AMIGADOS
     if( strchr (filename, ':') != NULL )
