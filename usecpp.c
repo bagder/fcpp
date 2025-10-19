@@ -108,7 +108,6 @@ struct Library *FPPBase=NULL;
 
 #include "fpp.h"
 #define MAX_TAGS 40 /* maximum number of tags allowed! */
-#define FILE_LOCAL static
 
 #define CPP_PREFS_FILE "cpp.prefs"
 #ifdef AMIGA
@@ -117,21 +116,21 @@ struct Library *FPPBase=NULL;
 #define DEFAULT_CPP_PREFS_FILE "$HOME/cpp.prefs"
 #endif
 
-FILE_LOCAL char PREFIX *own_input(char *, int, void *);
-FILE_LOCAL void PREFIX own_output(int, void *);
-FILE_LOCAL void PREFIX own_error(void *, char *, va_list);
-FILE_LOCAL int SetOptions(int, char **, struct fppTag **);
-FILE_LOCAL char GetPrefs(struct fppTag **, char **);
-FILE_LOCAL char DoString(struct fppTag **, char *);
+static char PREFIX *own_input(char *, int, void *);
+static void PREFIX own_output(int, void *);
+static void PREFIX own_error(void *, char *, va_list);
+static int SetOptions(int, char **, struct fppTag **);
+static char GetPrefs(struct fppTag **, char **);
+static char DoString(struct fppTag **, char *);
 
 #ifdef AMIGA
 extern long __stack=8000;
 #endif
 
-FILE_LOCAL char ignore=FALSE;  /* if we should ignore strange flags! */
-FILE_LOCAL char display=FALSE; /* display all options in use! */
+static char ignore=FALSE;  /* if we should ignore strange flags! */
+static char display=FALSE; /* display all options in use! */
 
-FILE_LOCAL char dontreadprefs; /* set if only the command line is valid */
+static char dontreadprefs; /* set if only the command line is valid */
 
 int main(int argc, char **argv)
 {
@@ -250,25 +249,25 @@ int main(int argc, char **argv)
 }
 
 
-FILE_LOCAL
+static
 char PREFIX *own_input(char *buffer, int size, void *userdata)
 {
   return(fgets(buffer, size, stdin));
 }
 
-FILE_LOCAL
+static
 void PREFIX own_output(int c, void *userdata)
 {
   putchar(c);
 }
 
-FILE_LOCAL
+static
 void PREFIX own_error(void *userdata, char *format, va_list arg)
 {
   vfprintf(stderr, format, arg);
 }
 
-FILE_LOCAL
+static
 char GetPrefs(struct fppTag **tagptr, char **string)
 {
   FILE     *PrefsFile_PF;
@@ -307,7 +306,7 @@ char GetPrefs(struct fppTag **tagptr, char **string)
   return ret;
 }
 
-FILE_LOCAL
+static
 char DoString(struct fppTag **tagptr, char *string)
 {
   char     *argv[MAX_TAGS];
@@ -341,7 +340,7 @@ char DoString(struct fppTag **tagptr, char *string)
   return (SetOptions(argc, argv, tagptr));
 }
 
-FILE_LOCAL
+static
 int SetOptions(int argc, char **argv, struct fppTag **tagptr)
 {
   int i;
