@@ -326,7 +326,7 @@ ReturnCode initdefines(struct Global *global)
      * Define __DATE__ as today's date.
      */
     dp = defendel(global, "__DATE__", FALSE);
-    tp = malloc(14);
+    tp = malloc(30);
     if(!tp || !dp)
       return(FPP_OUT_OF_MEMORY);
     dp->repl = tp;
@@ -342,7 +342,7 @@ ReturnCode initdefines(struct Global *global)
      * Define __TIME__ as this moment's time.
      */
     dp = defendel(global, "__TIME__", FALSE);
-    tp = malloc(11);
+    tp = malloc(30);
     if(!tp || !dp)
       return(FPP_OUT_OF_MEMORY);
     dp->repl = tp;
