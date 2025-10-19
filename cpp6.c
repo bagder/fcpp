@@ -481,6 +481,7 @@ char *savestring(struct Global *global, char *text)
    */
 
   char *result;
+  (void)global;
   result = malloc(strlen(text) + 1);
   strcpy(result, text);
   return (result);
