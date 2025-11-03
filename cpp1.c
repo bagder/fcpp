@@ -42,6 +42,7 @@ int PREFIX fppPreProcess(REG(a0) struct fppTag *tags)
 {
   int i=0;
   ReturnCode ret;       /* cpp return code */
+  int retVal;           /* fppPreProcess return code */
   struct Global *global;
 
   global=(struct Global *)malloc(sizeof(struct Global));
@@ -143,10 +144,16 @@ int PREFIX fppPreProcess(REG(a0) struct fppTag *tags)
   }
   fflush(stdout);
   fclose(stdout);
+  delalldefines(global);
 
+  retVal = IO_NORMAL;
   if (global->errors > 0 && !global->eflag)
-    return(IO_ERROR);
-  return(IO_NORMAL);       /* No errors or -E option set   */
+    retVal = IO_ERROR;
+  free(global->tokenbuf);
+  free(global->functionname);
+  free(global->spacebuf);
+  free(global);
+  return retVal;       /* No errors or -E option set   */
 }
 
 INLINE FILE_LOCAL
